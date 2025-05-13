@@ -107,21 +107,21 @@ cd Certificate_Issuance_Monitoring_System
 
 
 ```markdown
-![SignUp](images/SignUp_Page.png)
-![Login](images/Login_Page.png)
-![Applicant Dashboard](images/applicant_dashboard.png)
-![Submitted Applications](images/MyApplications_Page.png)
-![New Applications](images/NewApplication_Page.png)
-![Income Application Form](images/IncomeCertificate_Form.png)
-![Caste Application Form](images/CasteCertificate_Form.png)
-![Birth Application Form](images/BirthCertificate_Form.png)
-![Residence Application Form](images/ResidenceCertificate_Form.png)
-![Death Application Form](images/DeathCertificate_Form.png)
-![Marriage Application Form](images/MarriageCertificate_Form.png)
-![Admin Dashboard](images/admin_dashboard.png)
-![View Applications](images/ViewApplications_Page.png)
-![Approved Applications](images/ApprovedApplications_Page.png)
-![Rejected Applications](images/RejectedApplications_Page.png)
+![SignUp](./images/SignUp_Page.png)
+![Login](./images/Login_Page.png)
+![Applicant Dashboard](./images/applicant_dashboard.png)
+![Submitted Applications](./images/MyApplications_Page.png)
+![New Applications](./images/NewApplication_Page.png)
+![Income Application Form](./images/IncomeCertificate_Form.png)
+![Caste Application Form](./images/CasteCertificate_Form.png)
+![Birth Application Form](./images/BirthCertificate_Form.png)
+![Residence Application Form](./images/ResidenceCertificate_Form.png)
+![Death Application Form](./images/DeathCertificate_Form.png)
+![Marriage Application Form](./images/MarriageCertificate_Form.png)
+![Admin Dashboard](./images/admin_dashboard.png)
+![View Applications](./images/ViewApplications_Page.png)
+![Approved Applications](./images/ApprovedApplications_Page.png)
+![Rejected Applications](./images/RejectedApplications_Page.png)
 ```
 
 
