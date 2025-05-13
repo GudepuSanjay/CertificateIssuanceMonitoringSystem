@@ -102,19 +102,28 @@ cd Certificate_Issuance_Monitoring_System
 
 ---
 
-## 📷 Screenshots
+## 📷 Output Screenshots
 
-Place your images inside a directory named `images/` in the root folder and reference them like below:
+
 
 ```markdown
+![SignUp](images/SignUp_Page.png)
+![Login](images/Login_Page.png)
 ![Applicant Dashboard](images/applicant_dashboard.png)
+![Submitted Applications](images/MyApplications_Page.png)
+![New Applications](images/NewApplication_Page.png)
+![Income Application Form](images/IncomeCertificate_Form.png)
+![Caste Application Form](images/CasteCertificate_Form.png)
+![Birth Application Form](images/BirthCertificate_Form.png)
+![Residence Application Form](images/ResidenceCertificate_Form.png)
+![Death Application Form](images/DeathCertificate_Form.png)
+![Marriage Application Form](images/MarriageCertificate_Form.png)
 ![Admin Dashboard](images/admin_dashboard.png)
-![Certificate View](images/certificate_view.png)
+![View Applications](images/ViewApplications_Page.png)
+![Approved Applications](images/ApprovedApplications_Page.png)
+![Rejected Applications](images/RejectedApplications_Page.png)
 ```
 
-Example screenshot in README:
-
-![Applicant Dashboard](images/applicant_dashboard.png)
 
 ---
 
@@ -126,6 +135,6 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
