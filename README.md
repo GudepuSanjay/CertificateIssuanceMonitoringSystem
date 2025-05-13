@@ -107,7 +107,7 @@ cd Certificate_Issuance_Monitoring_System
 
 
 ```markdown
-![SignUp](./images/SignUp_Page.png)
+![SignUp](https://github.com/GudepuSanjay/CertificateIssuanceMonitoringSystem/blob/main/images/SignUp_Page.png/SignUp_Page.png)
 ![Login](./images/Login_Page.png)
 ![Applicant Dashboard](./images/applicant_dashboard.png)
 ![Submitted Applications](./images/MyApplications_Page.png)
