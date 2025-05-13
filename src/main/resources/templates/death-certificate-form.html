@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Death Certificate Application</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+        --primary: 79, 70, 229;
+        --secondary: 99, 102, 241;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .gradient-bg {
+        background: linear-gradient(135deg, rgba(79, 70, 229, 1) 0%, rgba(99, 102, 241, 1) 100%);
+    }
+
+    .input-field {
+        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+        background-color: #ffffff;
+    }
+
+    .input-field:focus {
+        border-color: rgba(var(--primary), 0.5);
+        box-shadow: 0 0 0 3px rgba(var(--primary), 0.1);
+    }
+
+    .section-header {
+        position: relative;
+        padding-left: 1.5rem;
+    }
+
+    .section-header::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: linear-gradient(to bottom, rgba(var(--primary), 1), rgba(var(--secondary), 1));
+        border-radius: 4px;
+    }
+
+    .file-upload {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .file-upload input[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, rgba(var(--primary), 1) 0%, rgba(var(--secondary), 1) 100%);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .death-header {
+        background: linear-gradient(135deg, rgba(55, 65, 81, 0.9) 0%, rgba(31, 41, 55, 0.9) 100%);
+    }
+
+    .file-display {
+        display: none;
+        margin-top: 8px;
+        padding: 8px 12px;
+        background: #f1f5f9;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #334155;
+    }
+
+    .file-display.show {
+        display: flex;
+        align-items: center;
+    }
+
+    .file-display i {
+        margin-right: 8px;
+        color: #4f46e5;
+    }
+
+    .remove-file {
+        margin-left: auto;
+        color: #ef4444;
+        cursor: pointer;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex">
+
+<!-- Main Content -->
+<main class="flex-1 p-6 md:p-8 overflow-y-auto">
+  <div class="max-w-4xl mx-auto glass-card rounded-xl overflow-hidden">
+    <!-- Form Header -->
+    <div class="death-header p-6 text-white">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold flex items-center">
+            <i class="ph ph-cross mr-3"></i>
+            Death Certificate Application
+          </h1>
+          <p class="text-gray-300 mt-1">Complete all required fields to register the death</p>
+        </div>
+        <div class="bg-white bg-opacity-20 rounded-full px-4 py-1 text-sm font-medium">
+          Step 1 of 3
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="h-1.5 bg-gray-200">
+      <div class="h-full bg-gray-600" style="width: 33%"></div>
+    </div>
+
+    <!-- Form Content -->
+    <form th:action="@{/submit-death-certificate}" method="post" enctype="multipart/form-data" class="p-6 md:p-8 space-y-8">
+      <!-- Deceased Details Section -->
+      <div class="space-y-6">
+        <div class="section-header">
+          <h2 class="text-xl font-semibold text-gray-800">
+            <i class="ph ph-user mr-2 text-gray-600"></i>
+            Deceased Person's Details
+          </h2>
+          <p class="text-gray-500 text-sm mt-1">Enter the deceased's personal information</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Full Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" name="deceasedName" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-gray-200"
+                     placeholder="Deceased's full name">
+            </div>
+          </div>
+
+          <!-- Father/Husband Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Father's/Husband's Name <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" name="fatherOrHusbandName" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-gray-200"
+                     placeholder="Father's or husband's name">
+            </div>
+          </div>
+
+          <!-- Date of Death -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Date of Death <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="date" name="deathDate" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-gray-200">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Application Date</label>
+            <div class="relative">
+              <i class="ph ph-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="date" name="applicationDate" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field  rounded-lg focus:ring-2 focus:ring-indigo-200">
+            </div>
+          </div>
+
+          <!-- Age at Death -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Age at Death <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-hourglass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="number" name="ageAtDeath" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-gray-200"
+                     placeholder="Age in years">
+            </div>
+          </div>
+
+          <!-- Gender -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Gender <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-gender-intersex absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <select name="gender" required
+                      class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-gray-200 appearance-none">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+              <i class="ph ph-caret-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+          </div>
+
+          <!-- Cause of Death -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Cause of Death <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-warning absolute left-3 top-4 transform -translate-y-1/2 text-gray-400"></i>
+              <textarea name="causeOfDeath" rows="3" required
+                        class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-gray-200"
+                        placeholder="Primary cause of death"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address Details Section -->
+      <div class="space-y-6">
+        <div class="section-header">
+          <h2 class="text-xl font-semibold text-gray-800">
+            <i class="ph ph-map-pin mr-2 text-indigo-600"></i>
+            Address Details
+          </h2>
+          <p class="text-gray-500 text-sm mt-1">Provide address information</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Permanent Address -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Permanent Address <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-house absolute left-3 top-4 transform -translate-y-1/2 text-gray-400"></i>
+              <textarea name="permanentAddress" rows="3" required
+                        class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-indigo-200"
+                        placeholder="House No, Street, Village/Town"></textarea>
+            </div>
+          </div>
+
+          <!-- Place of Death Address -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Place of Death Address <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-buildings absolute left-3 top-4 transform -translate-y-1/2 text-gray-400"></i>
+              <textarea name="deathPlaceAddress" rows="3" required
+                        class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-indigo-200"
+                        placeholder="Address where death occurred"></textarea>
+            </div>
+          </div>
+
+          <!-- State -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">State <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-map-trifold absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" name="state" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-indigo-200"
+                     placeholder="State">
+            </div>
+          </div>
+
+          <!-- District -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">District <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" name="district" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-indigo-200"
+                     placeholder="District">
+            </div>
+          </div>
+
+          <!-- PIN Code -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">PIN Code <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-postage-stamp absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" name="pincode" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-indigo-200"
+                     placeholder="6-digit PIN code">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informant Details Section -->
+      <div class="space-y-6">
+        <div class="section-header">
+          <h2 class="text-xl font-semibold text-gray-800">
+            <i class="ph ph-user-circle mr-2 text-green-600"></i>
+            Informant Details
+          </h2>
+          <p class="text-gray-500 text-sm mt-1">Provide information about the person reporting the death</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Informant Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" name="informantName" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-green-200"
+                     placeholder="Informant's full name">
+            </div>
+          </div>
+
+          <!-- Relationship -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Relationship <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-users absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" name="relationship" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-green-200"
+                     placeholder="Relationship to deceased">
+            </div>
+          </div>
+
+          <!-- Informant Address -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Address <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-house absolute left-3 top-4 transform -translate-y-1/2 text-gray-400"></i>
+              <textarea name="informantAddress" rows="3" required
+                        class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-green-200"
+                        placeholder="Informant's address"></textarea>
+            </div>
+          </div>
+
+          <!-- Contact Number -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="tel" name="contactNumber" required
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-green-200"
+                     placeholder="10-digit mobile number">
+            </div>
+          </div>
+
+          <!-- Aadhaar Number -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Aadhaar Number</label>
+            <div class="relative">
+              <i class="ph ph-identification-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" name="informantAadhaar"
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-green-200"
+                     placeholder="12-digit Aadhaar">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Death Particulars Section -->
+      <div class="space-y-6">
+        <div class="section-header">
+          <h2 class="text-xl font-semibold text-gray-800">
+            <i class="ph ph-info mr-2 text-purple-600"></i>
+            Death Particulars
+          </h2>
+          <p class="text-gray-500 text-sm mt-1">Provide additional details about the death</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Type of Death -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Type of Death <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <i class="ph ph-warning-circle absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <select name="deathType" required
+                      class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-purple-200 appearance-none">
+                <option value="">Select Type</option>
+                <option value="Natural">Natural</option>
+                <option value="Accidental">Accidental</option>
+                <option value="Suicide">Suicide</option>
+                <option value="Homicide">Homicide</option>
+                <option value="Other">Other</option>
+              </select>
+              <i class="ph ph-caret-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+          </div>
+
+          <!-- Hospital Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Hospital/Institution Name</label>
+            <div class="relative">
+              <i class="ph ph-hospital absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" name="hospitalName"
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-purple-200"
+                     placeholder="Name of hospital/institution">
+            </div>
+          </div>
+
+          <!-- Doctor's Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Doctor's Name</label>
+            <div class="relative">
+              <i class="ph ph-user-plus absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input type="text" name="doctorName"
+                     class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-purple-200"
+                     placeholder="Attending doctor's name">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents Section -->
+      <div class="space-y-6">
+        <div class="section-header">
+          <h2 class="text-xl font-semibold text-gray-800">
+            <i class="ph ph-file-text mr-2 text-yellow-600"></i>
+            Required Documents
+          </h2>
+          <p class="text-gray-500 text-sm mt-1">Upload required documents (PDF, JPG, PNG)</p>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Proof of Death -->
+          <div class="file-upload-container">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Proof of Death <span class="text-red-500">*</span></label>
+            <div class="relative mb-2">
+              <i class="ph ph-file absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <select name="proofOfDeathType" required
+                      class="w-full pl-10 pr-4 py-2.5 input-field rounded-lg focus:ring-2 focus:ring-yellow-200 appearance-none">
+                <option value="">Select Document Type</option>
+                <option value="HospitalReport">Hospital Death Report</option>
+                <option value="MCCD">Medical Certificate (MCCD)</option>
+                <option value="PoliceReport">Police Report</option>
+                <option value="BurialReceipt">Burial/Cremation Receipt</option>
+              </select>
+              <i class="ph ph-caret-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <div class="flex items-center justify-center w-full">
+              <label class="flex flex-col w-full border-2 border-dashed rounded-lg cursor-pointer hover:border-yellow-300 hover:bg-yellow-50 transition">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
+                  <i class="ph ph-upload text-3xl text-yellow-500 mb-2"></i>
+                  <p class="text-sm text-gray-500 text-center">
+                    <span class="font-semibold">Click to upload</span> or drag and drop<br>
+                    PDF, JPG, or PNG (Max 5MB)
+                  </p>
+                </div>
+                <input type="file" id="proofOfDeathFile" name="proofOfDeathFile" accept=".pdf,.jpg,.jpeg,.png" class="hidden" required>
+              </label>
+            </div>
+            <div id="proofOfDeathFileDisplay" class="file-display">
+              <i class="ph ph-file"></i>
+              <span class="file-name"></span>
+              <span class="remove-file" onclick="removeFile('proofOfDeathFile')">Remove</span>
+            </div>
+          </div>
+
+          <!-- Deceased's ID Proof -->
+          <div class="file-upload-container">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Deceased's ID Proof <span class="text-red-500">*</span></label>
+            <div class="flex items-center justify-center w-full">
+              <label class="flex flex-col w-full border-2 border-dashed rounded-lg cursor-pointer hover:border-yellow-300 hover:bg-yellow-50 transition">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
+                  <i class="ph ph-upload text-3xl text-yellow-500 mb-2"></i>
+                  <p class="text-sm text-gray-500 text-center">
+                    <span class="font-semibold">Click to upload</span> or drag and drop<br>
+                    PDF, JPG, or PNG (Max 5MB)
+                  </p>
+                </div>
+                <input type="file" id="deceasedIdProofFile" name="deceasedIdProofFile" accept=".pdf,.jpg,.jpeg,.png" class="hidden" required>
+              </label>
+            </div>
+            <div id="deceasedIdProofFileDisplay" class="file-display">
+              <i class="ph ph-file"></i>
+              <span class="file-name"></span>
+              <span class="remove-file" onclick="removeFile('deceasedIdProofFile')">Remove</span>
+            </div>
+          </div>
+
+          <!-- Address Proof -->
+          <div class="file-upload-container">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Address Proof <span class="text-red-500">*</span></label>
+            <div class="flex items-center justify-center w-full">
+              <label class="flex flex-col w-full border-2 border-dashed rounded-lg cursor-pointer hover:border-yellow-300 hover:bg-yellow-50 transition">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
+                  <i class="ph ph-upload text-3xl text-yellow-500 mb-2"></i>
+                  <p class="text-sm text-gray-500 text-center">
+                    <span class="font-semibold">Click to upload</span> or drag and drop<br>
+                    PDF, JPG, or PNG (Max 5MB)
+                  </p>
+                </div>
+                <input type="file" id="addressProofFile" name="addressProofFile" accept=".pdf,.jpg,.jpeg,.png" class="hidden" required>
+              </label>
+            </div>
+            <div id="addressProofFileDisplay" class="file-display">
+              <i class="ph ph-file"></i>
+              <span class="file-name"></span>
+              <span class="remove-file" onclick="removeFile('addressProofFile')">Remove</span>
+            </div>
+          </div>
+
+          <!-- Informant's ID Proof -->
+          <div class="file-upload-container">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Informant's ID Proof <span class="text-red-500">*</span></label>
+            <div class="flex items-center justify-center w-full">
+              <label class="flex flex-col w-full border-2 border-dashed rounded-lg cursor-pointer hover:border-yellow-300 hover:bg-yellow-50 transition">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
+                  <i class="ph ph-upload text-3xl text-yellow-500 mb-2"></i>
+                  <p class="text-sm text-gray-500 text-center">
+                    <span class="font-semibold">Click to upload</span> or drag and drop<br>
+                    PDF, JPG, or PNG (Max 5MB)
+                  </p>
+                </div>
+                <input type="file" id="informantIdProofFile" name="informantIdProofFile" accept=".pdf,.jpg,.jpeg,.png" class="hidden" required>
+              </label>
+            </div>
+            <div id="informantIdProofFileDisplay" class="file-display">
+              <i class="ph ph-file"></i>
+              <span class="file-name"></span>
+              <span class="remove-file" onclick="removeFile('informantIdProofFile')">Remove</span>
+            </div>
+          </div>
+
+          <!-- Affidavit -->
+          <div class="file-upload-container">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Affidavit (if delayed registration)</label>
+            <div class="flex items-center justify-center w-full">
+              <label class="flex flex-col w-full border-2 border-dashed rounded-lg cursor-pointer hover:border-yellow-300 hover:bg-yellow-50 transition">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
+                  <i class="ph ph-upload text-3xl text-yellow-500 mb-2"></i>
+                  <p class="text-sm text-gray-500 text-center">
+                    <span class="font-semibold">Click to upload</span> or drag and drop<br>
+                    PDF, JPG, or PNG (Max 5MB)
+                  </p>
+                </div>
+                <input type="file" id="affidavitFile" name="affidavitFile" accept=".pdf,.jpg,.jpeg,.png" class="hidden">
+              </label>
+            </div>
+            <div id="affidavitFileDisplay" class="file-display">
+              <i class="ph ph-file"></i>
+              <span class="file-name"></span>
+              <span class="remove-file" onclick="removeFile('affidavitFile')">Remove</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Declaration -->
+      <div class="flex items-start">
+        <input type="checkbox" id="declaration" required
+               class="mt-1 mr-3 h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+        <label for="declaration" class="text-sm text-gray-700">
+          I hereby declare that all the information provided is true to the best of my knowledge.
+          I understand that providing false information may lead to legal consequences.
+        </label>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4">
+        <!-- Exit Button -->
+        <a th:href="@{/apply-certificate}" class="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition flex items-center justify-center">
+          <i class="ph ph-x mr-2"></i> Exit
+        </a>
+
+        <button type="submit" class="px-6 py-3 submit-btn rounded-lg font-medium text-white hover:shadow-lg transition">
+          <i class="ph ph-paper-plane mr-2"></i> Submit Application
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script>
+  // Handle file selection and display filenames
+  document.querySelectorAll('input[type="file"]').forEach(input => {
+      input.addEventListener('change', function() {
+          const fileDisplayId = this.id + 'Display';
+          const fileDisplay = document.getElementById(fileDisplayId);
+          const fileNameDisplay = fileDisplay.querySelector('.file-name');
+
+          if (this.files.length > 0) {
+              fileNameDisplay.textContent = this.files[0].name;
+              fileDisplay.classList.add('show');
+
+              // Change icon based on file type
+              const fileType = this.files[0].type;
+              const icon = fileDisplay.querySelector('i');
+
+              if (fileType.includes('image')) {
+                  icon.className = 'ph ph-file-image';
+              } else if (fileType.includes('pdf')) {
+                  icon.className = 'ph ph-file-pdf';
+              } else {
+                  icon.className = 'ph ph-file';
+              }
+          } else {
+              fileDisplay.classList.remove('show');
+          }
+      });
+  });
+
+  // Function to remove selected file
+  function removeFile(inputId) {
+      const input = document.getElementById(inputId);
+      const fileDisplay = document.getElementById(inputId + 'Display');
+
+      input.value = '';
+      fileDisplay.classList.remove('show');
+  }
+</script>
+</body>
+</html>

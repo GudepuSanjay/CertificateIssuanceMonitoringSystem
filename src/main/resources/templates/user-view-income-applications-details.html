@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Income Certificate Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                padding: 0 !important;
+            }
+            .print-border {
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+<div class="container mx-auto py-8 px-4">
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden print-border">
+        <!-- Gradient Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                        <i class="ph ph-currency-dollar text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">Income Certificate Details</h1>
+                        <p class="text-blue-100 text-sm mt-1">Complete application information</p>
+                    </div>
+                </div>
+                <a th:href="@{/view-applications}" class="flex items-center text-blue-100 hover:text-white transition-colors">
+                    <i class="ph ph-arrow-left mr-2"></i> Back to Applications
+                </a>
+            </div>
+        </div>
+
+        <!-- Status Card -->
+        <div class="bg-white p-6 mb-6 card-hover">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Application ID</p>
+                    <p class="text-lg font-semibold text-gray-800" th:text="${details.id}">-</p>
+                </div>
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</p>
+                    <span th:switch="${details.status}" class="font-medium">
+                        <span th:case="'Approved'" class="text-green-600 bg-green-100 px-3 py-1 rounded-full text-sm inline-flex items-center">
+                            <i class="ph ph-check-circle mr-1"></i> Approved
+                        </span>
+                        <span th:case="'Rejected'" class="text-red-600 bg-red-100 px-3 py-1 rounded-full text-sm inline-flex items-center">
+                            <i class="ph ph-x-circle mr-1"></i> Rejected
+                        </span>
+                        <span th:case="*" class="text-yellow-600 bg-yellow-100 px-3 py-1 rounded-full text-sm inline-flex items-center">
+                            <i class="ph ph-clock mr-1"></i> Pending
+                        </span>
+                    </span>
+                </div>
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Applied On</p>
+                    <p class="text-lg font-semibold text-gray-800" th:text="${#temporals.format(details.applicationDate, 'dd MMM yyyy')}">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+            <!-- Left Column -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Applicant Information Section -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 card-hover">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                            <i class="ph ph-user-circle text-blue-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-xl font-semibold text-gray-800">Applicant Information</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Full Name</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${details.fullName}">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Father's Name</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${details.fatherName}">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Mother's Name</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${details.motherName}">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Date of Birth</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${#temporals.format(details.dateOfBirth, 'dd MMM yyyy')}">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Gender</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${details.gender}">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Religion</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${details.religion}">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Full Address</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${details.address}">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Income Details Section -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 card-hover">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-2 rounded-lg mr-3">
+                            <i class="ph ph-currency-dollar text-green-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-xl font-semibold text-gray-800">Income Details</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Annual Income</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${'₹' + #numbers.formatDecimal(details.annualIncome, 1, 2, 'COMMA')}">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Family Annual Income</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${'₹' + #numbers.formatDecimal(details.familyAnnualIncome, 1, 2, 'COMMA')}">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Family Members</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${details.familyMembers}">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Occupation</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${details.occupation}">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Income Source</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${details.incomeSource != null} ? ${details.incomeSource} : 'Not specified'">-</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-medium text-gray-500">Purpose</p>
+                            <p class="text-sm font-medium text-gray-800 mt-1" th:text="${details.purpose}">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- Documents Section -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 card-hover">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-100 p-2 rounded-lg mr-3">
+                            <i class="ph ph-files text-yellow-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-xl font-semibold text-gray-800">Submitted Documents</h2>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="ph ph-identification-card text-blue-500 text-xl mr-3"></i>
+                                <span class="text-sm font-medium">Aadhaar Card</span>
+                            </div>
+                            <a th:href="@{'/' + ${details.aadharCardPath}}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                                <i class="ph ph-eye mr-1"></i> View
+                            </a>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="ph ph-house text-blue-400 text-xl mr-3"></i>
+                                <span class="text-sm font-medium">Address Proof</span>
+                            </div>
+                            <a th:href="@{'/' + ${details.addressProofPath}}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                                <i class="ph ph-eye mr-1"></i> View
+                            </a>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="ph ph-file-text text-green-500 text-xl mr-3"></i>
+                                <span class="text-sm font-medium">Income Proof</span>
+                            </div>
+                            <a th:href="@{'/' + ${details.incomeProofPath}}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                                <i class="ph ph-eye mr-1"></i> View
+                            </a>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="text-sm font-medium mb-2">Applicant Photo</p>
+                            <img th:src="@{'/' + ${details.photoPath}}" alt="Applicant Photo" class="w-full h-auto max-h-48 object-cover rounded-lg">
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <p class="text-sm font-medium mb-2">Signature</p>
+                            <img th:src="@{'/' + ${details.signaturePath}}" alt="Applicant Signature" class="w-full h-16 object-contain bg-white p-2 rounded-lg">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Remarks Section -->
+                <div th:if="${details.remarks != null}" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 card-hover">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                            <i class="ph ph-note text-purple-600 text-xl"></i>
+                        </div>
+                        <h2 class="text-xl font-semibold text-gray-800">Remarks</h2>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-700 italic" th:text="${details.remarks}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons Section -->
+        <div class="bg-gray-50 p-6 border-t border-gray-200">
+            <div class="flex flex-col sm:flex-row justify-end gap-4">
+                <a th:href="@{/view-applications}"
+                   class="px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors">
+                    <i class="ph ph-arrow-left mr-2"></i> Back to List
+                </a>
+                <button onclick="window.print()"
+                        class="px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 flex items-center justify-center no-print transition-colors">
+                    <i class="ph ph-printer mr-2"></i> Print
+                </button>
+                <a th:href="@{'/edit-income-application/' + ${details.id}}"
+                   class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center transition-colors">
+                    <i class="ph ph-pencil-simple mr-2"></i> Edit Application
+                </a>
+                <a th:if="${details.status == 'Approved'}"
+                   th:href="@{/download/income/{id}(id=${details.id})}"
+                   class="px-5 py-2.5 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 flex items-center justify-center transition-colors">
+                    <i class="ph ph-download mr-2"></i> Download Certificate
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

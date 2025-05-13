@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<!-- Include your sidebar/navigation here -->
+
+<div class="ml-64 p-8">
+    <!-- Success Message -->
+    <div th:if="${successMessage}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">
+        <span class="block sm:inline" th:text="${successMessage}"></span>
+    </div>
+
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Update Profile</h1>
+                <a th:href="@{/admin-dashboard}" class="text-blue-600 hover:text-blue-800">Back to Dashboard</a>
+            </div>
+
+            <form th:action="@{/profile/update}" th:object="${profile}" method="post">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Full Name -->
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="fullName">
+                            Full Name
+                        </label>
+                        <input th:field="*{fullName}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="fullName" type="text">
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                            Email
+                        </label>
+                        <input th:field="*{email}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email">
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="phoneNumber">
+                            Phone Number
+                        </label>
+                        <input th:field="*{phoneNumber}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phoneNumber" type="tel">
+                    </div>
+
+                    <!-- Address -->
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="address">
+                            Address
+                        </label>
+                        <input th:field="*{address}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="address" type="text">
+                    </div>
+
+                    <!-- City -->
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="city">
+                            City
+                        </label>
+                        <input th:field="*{city}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="city" type="text">
+                    </div>
+
+                    <!-- State -->
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="state">
+                            State
+                        </label>
+                        <input th:field="*{state}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="state" type="text">
+                    </div>
+
+                    <!-- Zip Code -->
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="zipCode">
+                            Zip Code
+                        </label>
+                        <input th:field="*{zipCode}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="zipCode" type="text">
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Update Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Caste Certificate Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-6">
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <!-- Header Section -->
+    <div class="bg-gradient-to-r from-amber-600 to-orange-700 p-6 text-white">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold flex items-center gap-2">
+                <i class="ph ph-id-card text-2xl"></i>
+                Caste Certificate Details
+            </h1>
+            <span class="px-3 py-1 rounded-full text-sm font-medium"
+                  th:class="${details.status == 'Approved'} ? 'bg-green-100 text-green-800' :
+                           (${details.status == 'Rejected'} ? 'bg-red-100 text-red-800' :
+                           'bg-yellow-100 text-yellow-800')"
+                  th:text="${details.status}">
+                Status
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="p-6" th:if="${details}">
+        <!-- Application Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-amber-50 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold text-amber-800 mb-3 flex items-center">
+                    <i class="ph ph-identification-card text-amber-600 mr-2"></i>
+                    Basic Information
+                </h3>
+                <div class="space-y-2">
+                    <p><strong class="text-gray-700">Application ID:</strong> <span th:text="${details.id}" class="font-mono"></span></p>
+                    <p><strong class="text-gray-700">Full Name:</strong> <span th:text="${details.fullName}"></span></p>
+                    <p><strong class="text-gray-700">Date of Birth:</strong>
+                        <span th:text="${#temporals.format(details.dateOfBirth, 'dd MMM yyyy')}"></span></p>
+                    <p><strong class="text-gray-700">Applied On:</strong>
+                        <span th:text="${#temporals.format(details.applicationDate, 'dd MMM yyyy')}"></span></p>
+                </div>
+            </div>
+
+            <div class="bg-purple-50 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold text-purple-800 mb-3 flex items-center">
+                    <i class="ph ph-info text-purple-600 mr-2"></i>
+                    Status Details
+                </h3>
+                <div class="space-y-2">
+                    <p><strong class="text-gray-700">Current Status:</strong>
+                        <span th:text="${details.status}"
+                              th:class="${details.status == 'Approved'} ? 'text-green-600' :
+                                        (${details.status == 'Rejected'} ? 'text-red-600' :
+                                        'text-yellow-600')"></span>
+                    </p>
+                    <p><strong class="text-gray-700">Purpose:</strong>
+                        <span th:text="${details.purpose}"></span></p>
+                    <p th:if="${details.remarks}">
+                        <strong class="text-gray-700">Remarks:</strong>
+                        <span th:text="${details.remarks}" class="italic"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Caste Details -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8 shadow-sm">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="ph ph-id-card text-amber-600 mr-2"></i>
+                Caste & Family Information
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p><strong class="text-gray-700">Religion:</strong> <span th:text="${details.religion}"></span></p>
+                    <p><strong class="text-gray-700">Caste Category:</strong> <span th:text="${details.casteCategory}"></span></p>
+                    <p><strong class="text-gray-700">Sub-Caste:</strong> <span th:text="${details.subCaste ?: 'N/A'}"></span></p>
+                </div>
+                <div>
+                    <p><strong class="text-gray-700">Father's Name:</strong> <span th:text="${details.fatherName}"></span></p>
+                    <p><strong class="text-gray-700">Father's Caste Cert No:</strong>
+                        <span th:text="${details.fatherCasteCertificateNo ?: 'N/A'}"></span></p>
+                    <p><strong class="text-gray-700">Mother's Name:</strong> <span th:text="${details.motherName}"></span></p>
+                    <p><strong class="text-gray-700">Grandfather's Name:</strong>
+                        <span th:text="${details.grandfatherName ?: 'N/A'}"></span></p>
+                </div>
+                <div class="md:col-span-2">
+                    <p><strong class="text-gray-700">Permanent Address:</strong>
+                        <span th:text="${details.permanentAddress}"></span></p>
+                    <p th:if="${details.currentAddress}">
+                        <strong class="text-gray-700">Current Address:</strong>
+                        <span th:text="${details.currentAddress}"></span>
+                    </p>
+                </div>
+                <div>
+                    <p><strong class="text-gray-700">State:</strong> <span th:text="${details.state}"></span></p>
+                    <p><strong class="text-gray-700">District:</strong> <span th:text="${details.district}"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Section -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="ph ph-files text-indigo-600 mr-2"></i>
+                Uploaded Documents
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Document Cards -->
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-identification-card text-blue-500 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Aadhaar Card</h4>
+                    </div>
+                    <a th:href="@{'/' + ${details.aadharCardPath}}" target="_blank"
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                        <i class="ph ph-eye mr-1"></i> View Document
+                    </a>
+                </div>
+
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-certificate text-amber-500 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Caste Proof</h4>
+                    </div>
+                    <a th:href="@{'/' + ${details.casteProofPath}}" target="_blank"
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                        <i class="ph ph-eye mr-1"></i> View Document
+                    </a>
+                </div>
+
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-file-text text-green-500 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Address Proof</h4>
+                    </div>
+                    <a th:href="@{'/' + ${details.addressProofPath}}" target="_blank"
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                        <i class="ph ph-eye mr-1"></i> View Document
+                    </a>
+                </div>
+
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-user-square text-purple-500 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Applicant Photo</h4>
+                    </div>
+                    <div class="mt-2">
+                        <img th:src="@{'/' + ${details.photoPath}}" alt="Applicant Photo"
+                             class="w-24 h-24 object-cover rounded-md border-2 border-gray-200">
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-signature text-indigo-500 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Applicant Signature</h4>
+                    </div>
+                    <div class="mt-2">
+                        <img th:src="@{'/' + ${details.signaturePath}}" alt="Applicant Signature"
+                             class="w-24 h-24 object-cover rounded-md border-2 border-gray-200">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex justify-between">
+            <a href="/view-applications" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <i class="ph ph-arrow-left mr-2"></i> Back to Applications
+            </a>
+
+            <div class="space-x-3">
+                <button onclick="window.print()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <i class="ph ph-printer mr-2"></i> Print
+                </button>
+                <a th:if="${details.status == 'Approved'}"
+                   th:href="@{/download/caste/{id}(id=${details.id})}"
+                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <i class="ph ph-download mr-2"></i> Download Certificate
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

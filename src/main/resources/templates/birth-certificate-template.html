@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+<div style="text-align: center; border: 2px solid black; padding: 20px; max-width: 800px; margin: 0 auto;">
+    <div style="text-align: right; margin-bottom: 15px;">
+        Certificate No: <strong th:text="${id}"></strong>
+    </div>
+
+    <h2>GOVERNMENT OF TELANGANA</h2>
+    <h2>REVENUE DEPARTMENT</h2>
+    <h3>BIRTH CERTIFICATE</h3>
+
+    <div style="text-align: left; margin: 20px 0; line-height: 1.6;">
+        <p>This is to certify that according to the records of this office, <strong th:text="${fullName}"></strong>,</p>
+        <p>Son/Daughter of <strong th:text="${fatherName}"></strong> and <strong th:text="${motherName}"></strong>,</p>
+        <p>was born on <strong th:text="${dateOfBirth}"></strong> at <strong th:text="${birthPlace}"></strong>.</p>
+        <p>Gender: <strong th:text="${gender}"></strong></p>
+        <p>Religion: <strong th:text="${religion}"></strong></p>
+        <p>Caste: <strong th:text="${caste}"></strong></p>
+
+        <p style="margin-top: 20px;">This certificate is issued under the provisions of the Registration of Births and Deaths Act, 1969
+            and rules made thereunder after due verification of records maintained in this office.</p>
+
+        <p style="margin-top: 15px;">Application Date: <strong th:text="${applicationDate}"></strong></p>
+        <p>Certificate Issued Date: <strong th:text="${issuedDate}"></strong></p>
+    </div>
+
+    <div style="text-align: right; margin-top: 30px;">
+        <p>_________________________</p>
+        <p>Authorized Signatory</p>
+        <p>Revenue Department</p>
+    </div>
+</div>
+</body>
+</html>

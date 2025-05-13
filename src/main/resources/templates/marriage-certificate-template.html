@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+<div style="text-align: center; border: 2px solid black; padding: 20px; max-width: 800px; margin: 0 auto;">
+    <div style="text-align: right; margin-bottom: 15px;">
+        Registration No: <strong th:text="${registrationNumber}"></strong>
+    </div>
+
+    <h2>GOVERNMENT OF TELANGANA</h2>
+    <h2>REGISTRAR OF MARRIAGES</h2>
+    <h3>MARRIAGE CERTIFICATE</h3>
+
+    <div style="text-align: left; margin: 20px 0; line-height: 1.6;">
+        <p>This is to certify that the marriage between:</p>
+
+        <p style="margin-left: 20px;"><strong>Bride:</strong> <strong th:text="${brideFullName}"></strong>,</p>
+        <p style="margin-left: 40px;">D/O <strong th:text="${brideFatherName}"></strong></p>
+
+        <p style="margin-left: 20px;"><strong>Groom:</strong> <strong th:text="${groomFullName}"></strong>,</p>
+        <p style="margin-left: 40px;">S/O <strong th:text="${groomFatherName}"></strong></p>
+
+        <p style="margin-top: 15px;">was solemnized on <strong th:text="${marriageDate}"></strong> at <strong th:text="${marriagePlace}"></strong>
+            under the <strong th:text="${marriageType}"></strong> Marriage Act and has been duly registered in this office.</p>
+
+        <p style="margin-top: 15px;">Witnessed by:</p>
+        <p style="margin-left: 20px;">1. <strong th:text="${witness1Name}"></strong></p>
+        <p style="margin-left: 20px;">2. <strong th:text="${witness2Name}"></strong></p>
+
+        <p style="margin-top: 15px;">Application Date: <strong th:text="${applicationDate}"></strong></p>
+        <p>Certificate Issued Date: <strong th:text="${issuedDate}"></strong></p>
+    </div>
+
+    <div style="text-align: right; margin-top: 30px;">
+        <p>_________________________</p>
+        <p>Marriage Registrar</p>
+        <p>Government of Telangana</p>
+    </div>
+</div>
+</body>
+</html>

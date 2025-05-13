@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Apply Certificate | CERTIFY</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: 99 102 241;
+            --secondary: 168 85 247;
+        }
+
+         :root {
+      --primary: 99 102 241;
+      --secondary: 168 85 247;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: #0f0f13;
+      color: #e0e0e8;
+    }
+
+    .glass-panel {
+      background: rgba(20, 20, 30, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36);
+    }
+
+    .nav-item {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(99,102,241,1) 0%, rgba(168,85,247,1) 100%);
+      transition: width 0.3s ease;
+    }
+
+    .nav-item:hover::before {
+      width: 100%;
+    }
+
+    .nav-item.active::before {
+      width: 100%;
+    }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0f0f13;
+            color: #e0e0e8;
+            overflow-x: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99,102,241,1) 0%, rgba(0,0,0,0) 70%);
+            top: -100px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(168,85,247,1) 0%, rgba(0,0,0,0) 70%);
+            bottom: -150px;
+            right: -150px;
+        }
+
+        .glass-panel {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36);
+        }
+
+        .cert-select-card {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .cert-select-card:hover {
+            transform: translateY(-8px) rotateX(5deg);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .cert-select-card.selected {
+            background: linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(168,85,247,0.2) 100%);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .input-field {
+            background: rgba(30, 30, 40, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: rgba(99, 102, 241, 0.6);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .holographic {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .holographic::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .holographic:hover::after {
+            opacity: 1;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(to bottom, #1e1b4b, #1e1b4b);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar-link {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        .sidebar-link.active {
+            background: rgba(99, 102, 241, 0.25);
+        }
+
+        .sidebar-link.active::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(to bottom, #6366f1, #8b5cf6);
+        }
+    </style>
+    <script>
+        function navigateToForm(event) {
+            event.preventDefault();
+            var certificateType = document.getElementById("certificateType").value;
+            if (certificateType === "Birth") {
+                window.location.href = "/birth-certificate-form";
+            } else if (certificateType === "Marriage") {
+                window.location.href = "/marriage-certificate-form";
+            }
+            else if(certificateType === "Income") {
+                window.location.href="/income-certificate-form";
+            }
+            else if(certificateType === "Caste") {
+                window.location.href="/caste-certificate-form";
+            }
+            else if(certificateType === "Residence") {
+                window.location.href="/residence-certificate-form";
+            }
+            else {
+                window.location.href = "/death-certificate-form";
+            }
+        }
+
+        function selectCertificate(type) {
+            document.getElementById("certificateType").value = type;
+            const cards = document.querySelectorAll('.cert-select-card');
+            cards.forEach(card => {
+                card.classList.remove('selected');
+                if (card.dataset.type === type) {
+                    card.classList.add('selected');
+                }
+            });
+        }
+    </script>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+<!-- Background Orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- Main Container -->
+<div class="container mx-auto px-4 py-8 relative z-10">
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-12">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                <i class="ph ph-certificate text-xl text-white"></i>
+            </div>
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
+                CERTIFICATE ISSUANCE MONITORING SYSTEM (CIMS)
+
+            </h1>
+        </div>
+
+        <div class="flex items-center space-x-6">
+            <div class="relative group">
+                <button class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition">
+                    <i class="ph ph-bell text-xl"></i>
+                    <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
+                </button>
+            </div>
+            <div class="relative group">
+                <button class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                        <i class="ph ph-user text-xl text-white"></i>
+                    </div>
+                    <span class="hidden md:inline font-medium" th:text="${username}">Applicant</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Main Content Grid -->
+        <div class="lg:col-span-1 glass-panel rounded-2xl p-6">
+            <!-- Sidebar -->
+            <nav class="space-y-6">
+                <div class="mb-8">
+                    <h2 class="text-xl font-bold mb-2">Your Portal</h2>
+                    <p class="text-sm text-gray-400">Manage your certificate applications</p>
+                </div>
+
+                <a th:href="@{/applicant-dashboard}" class="nav-item block block py-3 text-lg font-medium">
+                    <i class="ph ph-house mr-3"></i> Dashboard
+                </a>
+                <a th:href="@{/apply-certificate}" class="nav-item block active py-3 text-lg font-medium">
+                    <i class="ph ph-file-text mr-3"></i> New Application
+                </a>
+                <a th:href="@{/view-applications}" class="nav-item block py-3 text-lg font-medium">
+                    <i class="ph ph-files mr-3"></i> My Applications
+                </a>
+                <a th:href="@{/profile}" class="nav-item block py-3 text-lg font-medium">
+                    <i class="ph ph-user mr-3"></i> Profile
+                </a>
+
+                <div class="pt-8 mt-8 border-t border-gray-800">
+                    <a th:href="@{/logout}" class="flex items-center text-gray-400 hover:text-white transition">
+                        <i class="ph ph-sign-out mr-3"></i> Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="lg:col-span-3 space-y-8">
+            <!-- Page Header -->
+            <div class="glass-panel rounded-2xl p-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">
+                    <span class="glow-text">Apply for Certificate</span>
+                </h1>
+                <p class="text-gray-400">Select the type of certificate you need and provide your details</p>
+            </div>
+
+            <!-- Certificate Selection -->
+            <div class="glass-panel rounded-2xl p-8">
+                <h2 class="text-xl font-bold mb-6 text-white flex items-center space-x-3">
+                    <i class="fas fa-scroll text-blue-400"></i>
+                    <span>Certificate Type</span>
+                </h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <div class="cert-select-card rounded-xl p-5 border border-gray-800 cursor-pointer transition hover:border-indigo-500/50"
+                         data-type="Birth" onclick="selectCertificate('Birth')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-lg bg-blue-900/30 flex items-center justify-center">
+                                <i class="fas fa-baby text-blue-400 text-xl"></i>
+                            </div>
+                            <span class="font-medium">Birth Certificate</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-select-card rounded-xl p-5 border border-gray-800 cursor-pointer transition hover:border-indigo-500/50"
+                         data-type="Caste" onclick="selectCertificate('Caste')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-lg bg-purple-900/30 flex items-center justify-center">
+                                <i class="fas fa-users text-purple-400 text-xl"></i>
+                            </div>
+                            <span class="font-medium">Caste Certificate</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-select-card rounded-xl p-5 border border-gray-800 cursor-pointer transition hover:border-indigo-500/50"
+                         data-type="Residence" onclick="selectCertificate('Residence')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-lg bg-green-900/30 flex items-center justify-center">
+                                <i class="fas fa-home text-green-400 text-xl"></i>
+                            </div>
+                            <span class="font-medium">Residence Certificate</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-select-card rounded-xl p-5 border border-gray-800 cursor-pointer transition hover:border-indigo-500/50"
+                         data-type="Death" onclick="selectCertificate('Death')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center">
+                                <i class="fas fa-cross text-gray-400 text-xl"></i>
+                            </div>
+                            <span class="font-medium">Death Certificate</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-select-card rounded-xl p-5 border border-gray-800 cursor-pointer transition hover:border-indigo-500/50"
+                         data-type="Income" onclick="selectCertificate('Income')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-lg bg-yellow-900/30 flex items-center justify-center">
+                                <i class="fas fa-money-bill-wave text-yellow-400 text-xl"></i>
+                            </div>
+                            <span class="font-medium">Income Certificate</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-select-card rounded-xl p-5 border border-gray-800 cursor-pointer transition hover:border-indigo-500/50"
+                         data-type="Marriage" onclick="selectCertificate('Marriage')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-lg bg-pink-900/30 flex items-center justify-center">
+                                <i class="fas fa-heart text-pink-400 text-xl"></i>
+                            </div>
+                            <span class="font-medium">Marriage Certificate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <select id="certificateType" name="certificateType" class="hidden">
+                    <option value="Birth">Birth Certificate</option>
+                    <option value="Caste">Caste Certificate</option>
+                    <option value="Residence">Residence Certificate</option>
+                    <option value="Death">Death Certificate</option>
+                    <option value="Income">Income Certificate</option>
+                    <option value="Marriage">Marriage Certificate</option>
+                </select>
+            </div>
+
+            <!-- Applicant Details -->
+            <form onsubmit="navigateToForm(event)" class="glass-panel rounded-2xl p-8">
+                <h2 class="text-xl font-bold mb-6 text-white flex items-center space-x-3">
+                    <i class="fas fa-user-edit text-blue-400"></i>
+                    <span>Your Information</span>
+                </h2>
+
+                <div class="space-y-6">
+                    <div class="holographic">
+                        <label for="name" class="block text-gray-300 mb-2 font-medium">Full Name</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-blue-400/80"></i>
+                            </div>
+                            <input type="text" id="name" name="name"
+                                   class="input-field w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none text-white"
+                                   required
+                                   placeholder="Enter your full name">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit"
+                                class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg font-medium hover:opacity-90 transition flex items-center space-x-2">
+                            <span>Continue Application</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+</main>
+</div>
+
+<!-- Floating Certificate Illustration -->
+<div class="fixed bottom-8 right-8 z-20 hidden xl:block">
+    <div class="floating relative">
+        <div class="absolute -inset-4 bg-indigo-500/10 rounded-2xl filter blur-xl"></div>
+        <div class="relative w-32 h-32 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-2xl border border-indigo-500/20 flex items-center justify-center">
+            <i class="ph ph-certificate text-5xl text-indigo-400/80"></i>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize with first certificate selected
+    document.addEventListener('DOMContentLoaded', function() {
+        selectCertificate('Birth');
+
+        // Add animation to cards
+        const cards = document.querySelectorAll('.cert-select-card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
+</body>
+</html>

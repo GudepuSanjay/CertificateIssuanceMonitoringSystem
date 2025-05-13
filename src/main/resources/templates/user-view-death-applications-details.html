@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <title>Death Certificate Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-6">
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+  <!-- Header Section -->
+  <div class="bg-gradient-to-r from-red-600 to-rose-700 p-6 text-white">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-bold flex items-center gap-2">
+        <i class="ph ph-skull text-2xl"></i>
+        Death Certificate details #<span th:text="${details.id}"></span>
+      </h1>
+      <div th:switch="${details.status}" class="px-3 py-1 rounded-full text-sm font-medium">
+        <span th:case="'Approved'" class="bg-green-100 text-green-800">Approved</span>
+        <span th:case="'Rejected'" class="bg-red-100 text-red-800">Rejected</span>
+        <span th:case="*" class="bg-yellow-100 text-yellow-800">Pending</span>
+      </div>
+    </div>
+    <p class="mt-2 text-rose-100">Submitted on <span th:text="${#temporals.format(details.applicationDate, 'dd MMMM yyyy')}"></span></p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="p-6" th:if="${details}">
+    <!-- Deceased Details -->
+    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8 shadow-sm">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+        <i class="ph ph-user text-red-600 mr-2"></i>
+        Deceased Person's Details
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <p><strong class="text-gray-700">Full Name:</strong> <span th:text="${details.deceasedName}"></span></p>
+          <p><strong class="text-gray-700">Father/Husband Name:</strong> <span th:text="${details.fatherOrHusbandName}"></span></p>
+          <p><strong class="text-gray-700">Gender:</strong> <span th:text="${details.gender}"></span></p>
+        </div>
+        <div class="space-y-3">
+          <p><strong class="text-gray-700">Date of Death:</strong> <span th:text="${#temporals.format(details.deathDate, 'dd MMMM yyyy')}"></span></p>
+          <p><strong class="text-gray-700">Age at Death:</strong> <span th:text="${details.ageAtDeath}"></span> years</p>
+        </div>
+        <div class="md:col-span-2 space-y-3">
+          <p><strong class="text-gray-700">Cause of Death:</strong> <span th:text="${details.causeOfDeath}"></span></p>
+          <p><strong class="text-gray-700">Type of Death:</strong> <span th:text="${details.deathType}"></span></p>
+<!--          <p><strong class="text-gray-700">Applied On:</strong> <span th:text="${#temporals.format(details.applicationDate, 'dd MMM yyyy')}"></span></p>-->
+          
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Address Details -->
+    <div class="bg-blue-50 border border-blue-100 rounded-lg p-6 mb-8 shadow-sm">
+      <h3 class="text-xl font-semibold text-blue-800 mb-4 flex items-center">
+        <i class="ph ph-map-pin text-blue-600 mr-2"></i>
+        Address Information
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <p><strong class="text-gray-700">Permanent Address:</strong></p>
+          <p class="whitespace-pre-line" th:text="${details.permanentAddress}"></p>
+        </div>
+        <div class="space-y-3">
+          <p><strong class="text-gray-700">Place of Death Address:</strong></p>
+          <p class="whitespace-pre-line" th:text="${details.deathPlaceAddress}"></p>
+        </div>
+        <div>
+          <p><strong class="text-gray-700">State:</strong> <span th:text="${details.state}"></span></p>
+          <p><strong class="text-gray-700">District:</strong> <span th:text="${details.district}"></span></p>
+          <p><strong class="text-gray-700">PIN Code:</strong> <span th:text="${details.pincode}"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Informant Details -->
+    <div class="bg-green-50 border border-green-100 rounded-lg p-6 mb-8 shadow-sm">
+      <h3 class="text-xl font-semibold text-green-800 mb-4 flex items-center">
+        <i class="ph ph-user-circle text-green-600 mr-2"></i>
+        Informant Details
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <p><strong class="text-gray-700">Name:</strong> <span th:text="${details.informantName}"></span></p>
+          <p><strong class="text-gray-700">Relationship to Deceased:</strong> <span th:text="${details.relationship}"></span></p>
+        </div>
+        <div class="space-y-3">
+          <p><strong class="text-gray-700">Contact Number:</strong> <span th:text="${details.contactNumber}"></span></p>
+          <p th:if="${details.informantAadhaar}">
+            <strong class="text-gray-700">Aadhaar Number:</strong> <span th:text="${details.informantAadhaar}"></span>
+          </p>
+        </div>
+        <div class="md:col-span-2">
+          <p><strong class="text-gray-700">Address:</strong></p>
+          <p class="whitespace-pre-line" th:text="${details.informantAddress}"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Death Particulars -->
+    <div class="bg-purple-50 border border-purple-100 rounded-lg p-6 mb-8 shadow-sm">
+      <h3 class="text-xl font-semibold text-purple-800 mb-4 flex items-center">
+        <i class="ph ph-info text-purple-600 mr-2"></i>
+        Death Particulars
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div th:if="${details.hospitalName}">
+          <p><strong class="text-gray-700">Hospital/Institution Name:</strong> <span th:text="${details.hospitalName}"></span></p>
+        </div>
+        <div th:if="${details.doctorName}">
+          <p><strong class="text-gray-700">Doctor's Name:</strong> <span th:text="${details.doctorName}"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents Section -->
+    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+        <i class="ph ph-files text-indigo-600 mr-2"></i>
+        Submitted Documents
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center mb-2">
+            <i class="ph ph-file-text text-red-500 text-2xl mr-3"></i>
+            <h4 class="font-medium text-gray-800">Proof of Death</h4>
+          </div>
+          <a th:if="${details.proofOfDeathPath}"
+             th:href="@{'/' + ${details.proofOfDeathPath}}"
+             target="_blank"
+             class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+            <i class="ph ph-eye mr-1"></i> View Document
+          </a>
+        </div>
+
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center mb-2">
+            <i class="ph ph-identification-card text-blue-500 text-2xl mr-3"></i>
+            <h4 class="font-medium text-gray-800">Deceased's ID Proof</h4>
+          </div>
+          <a th:if="${details.deceasedIdProofPath}"
+             th:href="@{'/' + ${details.deceasedIdProofPath}}"
+             target="_blank"
+             class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+            <i class="ph ph-eye mr-1"></i> View Document
+          </a>
+        </div>
+
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center mb-2">
+            <i class="ph ph-house text-green-500 text-2xl mr-3"></i>
+            <h4 class="font-medium text-gray-800">Address Proof</h4>
+          </div>
+          <a th:if="${details.addressProofPath}"
+             th:href="@{'/' + ${details.addressProofPath}}"
+             target="_blank"
+             class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+            <i class="ph ph-eye mr-1"></i> View Document
+          </a>
+        </div>
+
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center mb-2">
+            <i class="ph ph-user-square text-purple-500 text-2xl mr-3"></i>
+            <h4 class="font-medium text-gray-800">Informant's ID Proof</h4>
+          </div>
+          <a th:if="${details.informantIdProofPath}"
+             th:href="@{'/' + ${details.informantIdProofPath}}"
+             target="_blank"
+             class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+            <i class="ph ph-eye mr-1"></i> View Document
+          </a>
+        </div>
+
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors" th:if="${details.affidavitPath}">
+          <div class="flex items-center mb-2">
+            <i class="ph ph-seal text-amber-500 text-2xl mr-3"></i>
+            <h4 class="font-medium text-gray-800">Affidavit</h4>
+          </div>
+          <a th:href="@{'/' + ${details.affidavitPath}}"
+             target="_blank"
+             class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+            <i class="ph ph-eye mr-1"></i> View Document
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Remarks Section -->
+    <div class="bg-yellow-50 border border-yellow-100 rounded-lg p-6 mt-8 shadow-sm" th:if="${details.remarks}">
+      <h3 class="text-xl font-semibold text-yellow-800 mb-2 flex items-center">
+        <i class="ph ph-note text-yellow-600 mr-2"></i>
+        Official Remarks
+      </h3>
+      <p class="whitespace-pre-line" th:text="${details.remarks}"></p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-8 flex justify-between">
+      <a href="/view-applications" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <i class="ph ph-arrow-left mr-2"></i> Back to details
+      </a>
+
+      <div class="space-x-3">
+        <button onclick="window.print()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <i class="ph ph-printer mr-2"></i> Print
+        </button>
+        <a th:if="${details.status == 'Approved'}"
+           th:href="@{/download/death/{id}(id=${details.id})}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+          <i class="ph ph-download mr-2"></i> Download Certificate
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

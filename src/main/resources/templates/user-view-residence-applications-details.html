@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Residence Certificate Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-6">
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+  <!-- Debug Section -->
+  <div th:if="${details == null}" class="bg-red-100 p-4">
+    <p class="text-red-700 font-bold">DEBUG: No application data found in model</p>
+    <p>Possible issues:</p>
+    <ul class="list-disc pl-5">
+      <li>Controller didn't add 'details' to model</li>
+      <li>Service returned null for ID: <span th:text="${param.id[0]}"></span></li>
+      <li>Database record doesn't exist</li>
+    </ul>
+  </div>
+
+  <!-- Header Section -->
+  <div class="bg-gradient-to-r from-teal-600 to-cyan-700 p-6 text-white">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-bold flex items-center gap-2">
+        <i class="ph ph-house text-2xl"></i>
+        Residence Certificate Details
+      </h1>
+      <span class="px-3 py-1 rounded-full text-sm font-medium"
+            th:class="${details.status == 'Approved' ? 'bg-green-100 text-green-800' :
+                (details.status == 'Rejected' ? 'bg-red-100 text-red-800' :
+                'bg-yellow-100 text-yellow-800')}"
+            th:text="${details.status}">
+      </span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="p-6" th:if="${details}">
+    <!-- Application Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-teal-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-teal-800 mb-3 flex items-center">
+          <i class="ph ph-identification-card text-teal-600 mr-2"></i>
+          Personal Information
+        </h3>
+        <div class="space-y-2">
+          <p><strong class="text-gray-700">Application ID:</strong>
+            <span th:text="${details.id}" class="font-mono"></span>
+          </p>
+          <p><strong class="text-gray-700">Full Name:</strong>
+            <span th:text="${details.fullName}"></span>
+          </p>
+          <p><strong class="text-gray-700">Father's Name:</strong>
+            <span th:text="${details.fatherName}"></span>
+          </p>
+          <p><strong class="text-gray-700">Date of Birth:</strong>
+            <span th:text="${#temporals.format(details.dateOfBirth, 'dd MMM yyyy')}"></span>
+          </p>
+          <p><strong class="text-gray-700">Gender:</strong>
+            <span th:text="${details.gender}"></span>
+          </p>
+          <p><strong class="text-gray-700">Nationality:</strong>
+            <span th:text="${details.nationality}"></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="bg-purple-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-purple-800 mb-3 flex items-center">
+          <i class="ph ph-info text-purple-600 mr-2"></i>
+          Status Details
+        </h3>
+        <div class="space-y-2">
+          <p><strong class="text-gray-700">Application Date:</strong>
+            <span th:text="${#temporals.format(details.applicationDate, 'dd MMM yyyy')}"></span>
+          </p>
+          <p><strong class="text-gray-700">Current Status:</strong>
+            <span th:text="${details.status}"
+                  th:class="${details.status == 'Approved' ? 'text-green-600' :
+                (details.status == 'Rejected' ? 'text-red-600' :
+                'text-yellow-600')}">
+            </span>
+          </p>
+          <p><strong class="text-gray-700">Years of Residence:</strong>
+            <span th:text="${details.residenceYears}"></span> years
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Residence Details -->
+    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8 shadow-sm">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+        <i class="ph ph-map-pin text-teal-600 mr-2"></i>
+        Residence Information
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <p><strong class="text-gray-700">Current Address:</strong>
+            <span th:text="${details.currentAddress}"></span>
+          </p>
+        </div>
+        <div>
+          <p><strong class="text-gray-700">Permanent Address:</strong>
+            <span th:text="${details.permanentAddress}"></span>
+          </p>
+        </div>
+        <div>
+          <p><strong class="text-gray-700">District:</strong>
+            <span th:text="${details.district}"></span>
+          </p>
+        </div>
+        <div>
+          <p><strong class="text-gray-700">State:</strong>
+            <span th:text="${details.state}"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents Section -->
+    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+        <i class="ph ph-files text-indigo-600 mr-2"></i>
+        Uploaded Documents
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Aadhaar Card -->
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors" th:if="${details.aadhaarPath}">
+          <div class="flex items-center mb-2">
+            <i class="ph ph-identification-card text-blue-500 text-2xl mr-3"></i>
+            <h4 class="font-medium text-gray-800">Aadhaar Card</h4>
+          </div>
+          <a th:href="@{'/' + ${details.aadhaarPath}}" target="_blank"
+             class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+            <i class="ph ph-eye mr-1"></i> View Document
+          </a>
+        </div>
+
+        <!-- Address Proof -->
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors" th:if="${details.addressProofPath}">
+          <div class="flex items-center mb-2">
+            <i class="ph ph-file-text text-teal-500 text-2xl mr-3"></i>
+            <h4 class="font-medium text-gray-800">Address Proof</h4>
+          </div>
+          <a th:href="@{'/' + ${details.addressProofPath}}" target="_blank"
+             class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+            <i class="ph ph-eye mr-1"></i> View Document
+          </a>
+        </div>
+
+        <!-- Affidavit -->
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors" th:if="${details.affidavitPath}">
+          <div class="flex items-center mb-2">
+            <i class="ph ph-file-text text-purple-500 text-2xl mr-3"></i>
+            <h4 class="font-medium text-gray-800">Affidavit</h4>
+          </div>
+          <a th:href="@{'/' + ${details.affidavitPath}}" target="_blank"
+             class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+            <i class="ph ph-eye mr-1"></i> View Document
+          </a>
+        </div>
+
+        <!-- Applicant Photo -->
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors" th:if="${details.photoPath}">
+          <div class="flex items-center mb-2">
+            <i class="ph ph-user-square text-amber-500 text-2xl mr-3"></i>
+            <h4 class="font-medium text-gray-800">Applicant Photo</h4>
+          </div>
+          <div class="mt-2">
+            <img th:src="@{'/' + ${details.photoPath}}" alt="Applicant Photo"
+                 class="w-24 h-24 object-cover rounded-md border-2 border-gray-200">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-8 flex justify-between">
+      <a href="/view-applications" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <i class="ph ph-arrow-left mr-2"></i> Back to Applications
+      </a>
+
+      <div class="space-x-3">
+        <button  onclick="window.print()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <i class="ph ph-printer mr-2"></i> Print
+        </button>
+        <a th:if="${details.status == 'Approved'}"
+           th:href="@{/download/residence/{id}(id=${details.id})}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+          <i class="ph ph-download mr-2"></i> Download Certificate
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // Print functionality
+  document.addEventListener('DOMContentLoaded', function() {
+      // Add any additional JavaScript here if needed
+  });
+</script>
+</body>
+</html>

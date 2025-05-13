@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>View Applications | Admin Portal</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: {
+                        50: '#f0f9ff',
+                        100: '#e0f2fe',
+                        200: '#bae6fd',
+                        300: '#7dd3fc',
+                        400: '#38bdf8',
+                        500: '#0ea5e9',
+                        600: '#0284c7',
+                        700: '#0369a1',
+                        800: '#075985',
+                        900: '#0c4a6e',
+                    }
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                }
+            }
+        }
+    }
+  </script>
+  <style>
+    body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        .table-row:hover {
+            background-color: #f8fafc;
+        }
+
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-icon {
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.1);
+        }
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
+    }
+
+    .sidebar {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    }
+
+    .tab-button {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tab-button.active {
+        background-color: #0ea5e9;
+        color: white;
+        box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.2), 0 2px 4px -1px rgba(14, 165, 233, 0.1);
+    }
+
+    .tab-button:hover:not(.active) {
+        background-color: #f1f5f9;
+    }
+
+    .card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+    }
+
+    .table-row:hover {
+        background-color: #f8fafc;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+    }
+
+    .action-btn {
+        transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .nav-item {
+        transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-icon {
+        transition: all 0.2s ease;
+    }
+
+    .nav-item:hover .nav-icon {
+        transform: scale(1.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex">
+<!-- Sidebar -->
+<div class="sidebar w-64 text-gray-300 min-h-screen p-6 fixed shadow-xl">
+  <div class="flex items-center mb-10">
+    <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg mr-3">
+      <i class="fas fa-user-shield text-white text-xl"></i>
+    </div>
+    <h2 class="text-white text-xl font-bold">Admin Portal</h2>
+  </div>
+  <ul class="space-y-2">
+    <li>
+      <a th:href="@{/admin-dashboard}" class="nav-item flex items-center gap-3 p-4 rounded-xl hover:text-white group">
+        <div class="bg-blue-500/20 p-2 rounded-lg group-hover:bg-blue-500/30 transition-colors">
+          <i class="fas fa-chart-pie text-blue-400 w-5 text-center group-hover:text-blue-300 nav-icon"></i>
+        </div>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    <li>
+      <a th:href="@{/admin-view-applications}" class="nav-item active flex items-center gap-3 p-4 rounded-xl hover:text-white group">
+        <div class="bg-blue-500/20 p-2 rounded-lg group-hover:bg-blue-500/30 transition-colors">
+          <i class="fas fa-file-alt text-blue-400 w-5 text-center group-hover:text-blue-300 nav-icon"></i>
+        </div>
+        <span>View Applications</span>
+      </a>
+    </li>
+    <li>
+      <a th:href="@{/approved-applications}" class="nav-item  flex items-center gap-3 p-4 rounded-xl hover:text-white group">
+        <div class="bg-green-500/30 p-2 rounded-lg">
+          <i class="fas fa-check-double text-green-300 w-5 text-center nav-icon"></i>
+        </div>
+        <span>Approved</span>
+        <span class="ml-auto bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full" th:text="${totalApprovedApplications}"></span>
+      </a>
+    </li>
+    <li>
+      <a th:href="@{/rejected-applications}" class="nav-item flex items-center gap-3 p-4 rounded-xl hover:text-white group">
+        <div class="bg-red-500/20 p-2 rounded-lg group-hover:bg-red-500/30 transition-colors">
+          <i class="fas fa-ban text-red-400 w-5 text-center group-hover:text-red-300 nav-icon"></i>
+        </div>
+        <span>Rejected</span>
+        <span class="ml-auto bg-red-500/20 text-red-400 text-xs px-2 py-1 rounded-full" th:text="${totalRejectedApplications}"></span>
+      </a>
+    </li>
+    <li class="mt-8 pt-4 border-t border-gray-700">
+      <a th:href="@{/logout}" class="nav-item flex items-center gap-3 p-4 rounded-xl text-red-400 hover:text-red-300 group">
+        <div class="bg-red-500/20 p-2 rounded-lg group-hover:bg-red-500/30 transition-colors">
+          <i class="fas fa-sign-out-alt w-5 text-center nav-icon"></i>
+        </div>
+        <span>Logout</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- Main Content -->
+<main class="flex-1 p-8 ml-64">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Application Management</h1>
+      <p class="text-gray-500">Review and manage all certificate applications</p>
+    </div>
+    <div class="flex items-center space-x-4">
+      <div class="relative">
+        <button id="profileButton" class="flex items-center space-x-2 focus:outline-none">
+          <div class="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium">
+            <span th:text="${username != null ? username.substring(0, 1).toUpperCase() : 'A'}">A</span>
+          </div>
+          <span class="text-gray-700 font-medium" th:text="${username}">Admin</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="flex mb-6 bg-white rounded-xl shadow-sm overflow-hidden">
+    <button class="tab-button active px-6 py-3 flex items-center" onclick="showTab('birth-cert')">
+      <i class="fas fa-baby-carriage mr-2"></i> Birth
+    </button>
+    <button class="tab-button px-6 py-3 flex items-center" onclick="showTab('income-cert')">
+      <i class="fas fa-money-bill-wave mr-2"></i> Income
+    </button>
+    <button class="tab-button px-6 py-3 flex items-center" onclick="showTab('caste-cert')">
+      <i class="fas fa-users mr-2"></i> Caste
+    </button>
+    <button class="tab-button px-6 py-3 flex items-center" onclick="showTab('residence-cert')">
+      <i class="fas fa-home mr-2"></i> Residence
+    </button>
+    <button class="tab-button px-6 py-3 flex items-center" onclick="showTab('marriage-cert')">
+      <i class="fas fa-heart mr-2"></i> Marriage
+    </button>
+    <button class="tab-button px-6 py-3 flex items-center" onclick="showTab('death-cert')">
+      <i class="fas fa-cross mr-2"></i> Death
+    </button>
+  </div>
+
+  <!-- Birth Certificate Applications -->
+  <div id="birth-cert" class="tab-content active">
+    <div class="card p-6 mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800">
+          <i class="fas fa-baby-carriage text-blue-500 mr-2"></i> Birth Certificate Applications
+        </h3>
+        <div class="relative">
+          <input type="text" placeholder="Search applications..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+          <tr class="bg-gray-50 text-gray-600 text-sm">
+            <th class="px-6 py-3 text-left font-medium">Application ID</th>
+            <th class="px-6 py-3 text-left font-medium">Full Name</th>
+            <th class="px-6 py-3 text-left font-medium">Date of Birth</th>
+            <th class="px-6 py-3 text-left font-medium">Status</th>
+            <th class="px-6 py-3 text-left font-medium">Actions</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+          <tr th:each="cert : ${birthCertificate}" class="table-row">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${cert.id}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${cert.fullName}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(cert.dateOfBirth, 'dd-MM-yyyy')}"></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                                    <span th:class="${cert.status == 'Approved' ? 'bg-green-100 text-green-800' :
+                                                    (cert.status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')}"
+                                          class="status-badge" th:text="${cert.status}">
+                                    </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <div class="flex space-x-2">
+                <form th:action="@{/update-status}" method="post" class="flex items-center space-x-2">
+                  <input type="hidden" name="id" th:value="${cert.id}">
+                  <input type="hidden" name="type" value="birth">
+                  <select name="status" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                  <input type="text" name="remarks" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Remarks">
+                  <button type="submit" class="action-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                    Update
+                  </button>
+                </form>
+                <a th:href="@{/admin-view-birth-certificate/{id}(id=${cert.id})}" class="action-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm">
+                  <i class="fas fa-eye mr-1"></i> View
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr th:if="${birthCertificate.isEmpty()}">
+            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+              No birth certificate applications found
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-between items-center mt-4">
+        <div class="text-sm text-gray-500">
+          Showing <span th:text="${birthCertificate.size()}">0</span> applications
+        </div>
+        <div class="flex space-x-2">
+          <button class="px-3 py-1 border border-gray-200 rounded-md text-sm text-gray-600 hover:bg-gray-50">
+            Previous
+          </button>
+          <button class="px-3 py-1 border border-gray-200 rounded-md text-sm text-gray-600 hover:bg-gray-50">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Income Certificate Applications -->
+  <div id="income-cert" class="tab-content">
+    <div class="card p-6 mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800">
+          <i class="fas fa-money-bill-wave text-green-500 mr-2"></i> Income Certificate Applications
+        </h3>
+        <div class="relative">
+          <input type="text" placeholder="Search applications..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+          <tr class="bg-gray-50 text-gray-600 text-sm">
+            <th class="px-6 py-3 text-left font-medium">Application ID</th>
+            <th class="px-6 py-3 text-left font-medium">Full Name</th>
+            <th class="px-6 py-3 text-left font-medium">Annual Income</th>
+            <th class="px-6 py-3 text-left font-medium">Status</th>
+            <th class="px-6 py-3 text-left font-medium">Actions</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+          <tr th:each="cert : ${incomeCertificate}" class="table-row">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${cert.id}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${cert.fullName}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${'₹' + #numbers.formatDecimal(cert.annualIncome, 1, 2, 'COMMA')}"></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                                    <span th:class="${cert.status == 'Approved' ? 'bg-green-100 text-green-800' :
+                                                    (cert.status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')}"
+                                          class="status-badge" th:text="${cert.status}">
+                                    </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <div class="flex space-x-2">
+                <form th:action="@{/update-status}" method="post" class="flex items-center space-x-2">
+                  <input type="hidden" name="id" th:value="${cert.id}">
+                  <input type="hidden" name="type" value="income">
+                  <select name="status" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                  <input type="text" name="remarks" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Remarks">
+                  <button type="submit" class="action-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                    Update
+                  </button>
+                </form>
+                <a th:href="@{/admin-view-applications/income/{id}(id=${cert.id})}" class="action-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm">
+                  <i class="fas fa-eye mr-1"></i> View
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr th:if="${incomeCertificate.isEmpty()}">
+            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+              No income certificate applications found
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Caste Certificate Applications -->
+  <div id="caste-cert" class="tab-content">
+    <div class="card p-6 mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800">
+          <i class="fas fa-users text-purple-500 mr-2"></i> Caste Certificate Applications
+        </h3>
+        <div class="relative">
+          <input type="text" placeholder="Search applications..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+          <tr class="bg-gray-50 text-gray-600 text-sm">
+            <th class="px-6 py-3 text-left font-medium">Application ID</th>
+            <th class="px-6 py-3 text-left font-medium">Applicant Name</th>
+            <th class="px-6 py-3 text-left font-medium">Caste</th>
+            <th class="px-6 py-3 text-left font-medium">Status</th>
+            <th class="px-6 py-3 text-left font-medium">Actions</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+          <tr th:each="cert : ${casteCertificate}" class="table-row">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${cert.id}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${cert.fullName}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${cert.casteCategory}"></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                                    <span th:class="${cert.status == 'Approved' ? 'bg-green-100 text-green-800' :
+                                                    (cert.status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')}"
+                                          class="status-badge" th:text="${cert.status}">
+                                    </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <div class="flex space-x-2">
+                <form th:action="@{/update-status}" method="post" class="flex items-center space-x-2">
+                  <input type="hidden" name="id" th:value="${cert.id}">
+                  <input type="hidden" name="type" value="caste">
+                  <select name="status" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                  <input type="text" name="remarks" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Remarks">
+                  <button type="submit" class="action-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                    Update
+                  </button>
+                </form>
+                <a th:href="@{/admin-view-applications/caste/{id}(id=${cert.id})}" class="action-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm">
+                  <i class="fas fa-eye mr-1"></i> View
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr th:if="${casteCertificate.isEmpty()}">
+            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+              No caste certificate applications found
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Residence Certificate Applications -->
+  <div id="residence-cert" class="tab-content">
+    <div class="card p-6 mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800">
+          <i class="fas fa-home text-indigo-500 mr-2"></i> Residence Certificate Applications
+        </h3>
+        <div class="relative">
+          <input type="text" placeholder="Search applications..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+          <tr class="bg-gray-50 text-gray-600 text-sm">
+            <th class="px-6 py-3 text-left font-medium">Application ID</th>
+            <th class="px-6 py-3 text-left font-medium">Applicant Name</th>
+            <th class="px-6 py-3 text-left font-medium">Address</th>
+            <th class="px-6 py-3 text-left font-medium">Status</th>
+            <th class="px-6 py-3 text-left font-medium">Actions</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+          <tr th:each="cert : ${residenceCertificate}" class="table-row">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${cert.id}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${cert.fullName}"></td>
+            <td class="px-6 py-4 text-sm text-gray-500" th:text="${#strings.abbreviate(cert.currentAddress, 30)}"></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                                    <span th:class="${cert.status == 'Approved' ? 'bg-green-100 text-green-800' :
+                                                    (cert.status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')}"
+                                          class="status-badge" th:text="${cert.status}">
+                                    </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <div class="flex space-x-2">
+                <form th:action="@{/update-status}" method="post" class="flex items-center space-x-2">
+                  <input type="hidden" name="id" th:value="${cert.id}">
+                  <input type="hidden" name="type" value="residence">
+                  <select name="status" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                  <input type="text" name="remarks" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Remarks">
+                  <button type="submit" class="action-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                    Update
+                  </button>
+                </form>
+                <a th:href="@{/admin-view-applications/residence/{id}(id=${cert.id})}" class="action-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm">
+                  <i class="fas fa-eye mr-1"></i> View
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr th:if="${residenceCertificate.isEmpty()}">
+            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+              No residence certificate applications found
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<!--  &lt;!&ndash; Residence Certificate Applications &ndash;&gt;-->
+<!--  <div id="residence-cert" class="tab-content">-->
+<!--    <div class="card p-6 mb-6">-->
+<!--      <div class="flex justify-between items-center mb-4">-->
+<!--        <h3 class="text-xl font-semibold text-gray-800">-->
+<!--          <i class="fas fa-users text-purple-500 mr-2"></i> Residence Certificate Applications-->
+<!--        </h3>-->
+<!--        <div class="relative">-->
+<!--          <input type="text" placeholder="Search applications..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">-->
+<!--          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="overflow-x-auto">-->
+<!--        <table class="w-full">-->
+<!--          <thead>-->
+<!--          <tr class="bg-gray-50 text-gray-600 text-sm">-->
+<!--            <th class="px-6 py-3 text-left font-medium">Application ID</th>-->
+<!--            <th class="px-6 py-3 text-left font-medium">Applicant Name</th>-->
+<!--            <th class="px-6 py-3 text-left font-medium">Address</th>-->
+<!--            <th class="px-6 py-3 text-left font-medium">Status</th>-->
+<!--            <th class="px-6 py-3 text-left font-medium">Actions</th>-->
+<!--          </tr>-->
+<!--          </thead>-->
+<!--          <tbody class="divide-y divide-gray-100">-->
+<!--          <tr th:each="cert : ${residenceCertificate}" class="table-row">-->
+<!--            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${cert.id}"></td>-->
+<!--            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${cert.fullName}"></td>-->
+<!--            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${cert.address}"></td>-->
+<!--            <td class="px-6 py-4 whitespace-nowrap">-->
+<!--                                    <span th:class="${cert.status == 'Approved' ? 'bg-green-100 text-green-800' :-->
+<!--                                                    (cert.status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')}"-->
+<!--                                          class="status-badge" th:text="${cert.status}">-->
+<!--                                    </span>-->
+<!--            </td>-->
+<!--            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-->
+<!--              <div class="flex space-x-2">-->
+<!--                <form th:action="@{/update-status}" method="post" class="flex items-center space-x-2">-->
+<!--                  <input type="hidden" name="id" th:value="${cert.id}">-->
+<!--                  <input type="hidden" name="type" value="caste">-->
+<!--                  <select name="status" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">-->
+<!--                    <option value="Pending">Pending</option>-->
+<!--                    <option value="Approved">Approved</option>-->
+<!--                    <option value="Rejected">Rejected</option>-->
+<!--                  </select>-->
+<!--                  <input type="text" name="remarks" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Remarks">-->
+<!--                  <button type="submit" class="action-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">-->
+<!--                    Update-->
+<!--                  </button>-->
+<!--                </form>-->
+<!--                <a th:href="@{/admin-view-applications/caste/{id}(id=${cert.id})}" class="action-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm">-->
+<!--                  <i class="fas fa-eye mr-1"></i> View-->
+<!--                </a>-->
+<!--              </div>-->
+<!--            </td>-->
+<!--          </tr>-->
+<!--          <tr th:if="${residenceCertificate.isEmpty()}">-->
+<!--            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">-->
+<!--              No caste certificate applications found-->
+<!--            </td>-->
+<!--          </tr>-->
+<!--          </tbody>-->
+<!--        </table>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+  <!-- Marriage Certificate Applications -->
+  <div id="marriage-cert" class="tab-content">
+    <div class="card p-6 mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800">
+          <i class="fas fa-heart text-pink-500 mr-2"></i> Marriage Certificate Applications
+        </h3>
+        <div class="relative">
+          <input type="text" placeholder="Search applications..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+          <tr class="bg-gray-50 text-gray-600 text-sm">
+            <th class="px-6 py-3 text-left font-medium">Application ID</th>
+            <th class="px-6 py-3 text-left font-medium">Groom Name</th>
+            <th class="px-6 py-3 text-left font-medium">Bride Name</th>
+            <th class="px-6 py-3 text-left font-medium">Marriage Date</th>
+            <th class="px-6 py-3 text-left font-medium">Status</th>
+            <th class="px-6 py-3 text-left font-medium">Actions</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+          <tr th:each="cert : ${marriageCertificate}" class="table-row">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${cert.id}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${cert.groomFullName}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${cert.brideFullName}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(cert.marriageDate, 'dd-MM-yyyy')}"></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                                    <span th:class="${cert.status == 'Approved' ? 'bg-green-100 text-green-800' :
+                                                    (cert.status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')}"
+                                          class="status-badge" th:text="${cert.status}">
+                                    </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <div class="flex space-x-2">
+                <form th:action="@{/update-status}" method="post" class="flex items-center space-x-2">
+                  <input type="hidden" name="id" th:value="${cert.id}">
+                  <input type="hidden" name="type" value="marriage">
+                  <select name="status" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                  <input type="text" name="remarks" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Remarks">
+                  <button type="submit" class="action-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                    Update
+                  </button>
+                </form>
+                <a th:href="@{/admin-view-applications/marriage/{id}(id=${cert.id})}" class="action-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm">
+                  <i class="fas fa-eye mr-1"></i> View
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr th:if="${marriageCertificate.isEmpty()}">
+            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+              No marriage certificate applications found
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Death Certificate Applications -->
+  <div id="death-cert" class="tab-content">
+    <div class="card p-6 mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800">
+          <i class="fas fa-cross text-gray-500 mr-2"></i> Death Certificate Applications
+        </h3>
+        <div class="relative">
+          <input type="text" placeholder="Search applications..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+          <tr class="bg-gray-50 text-gray-600 text-sm">
+            <th class="px-6 py-3 text-left font-medium">Application ID</th>
+            <th class="px-6 py-3 text-left font-medium">Deceased Name</th>
+            <th class="px-6 py-3 text-left font-medium">Date of Death</th>
+            <th class="px-6 py-3 text-left font-medium">Cause</th>
+            <th class="px-6 py-3 text-left font-medium">Status</th>
+            <th class="px-6 py-3 text-left font-medium">Actions</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+          <tr th:each="cert : ${deathCertificate}" class="table-row">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${cert.id}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${cert.deceasedName}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(cert.deathDate, 'dd-MM-yyyy')}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#strings.abbreviate(cert.causeOfDeath, 20)}"></td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                                    <span th:class="${cert.status == 'Approved' ? 'bg-green-100 text-green-800' :
+                                                    (cert.status == 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')}"
+                                          class="status-badge" th:text="${cert.status}">
+                                    </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <div class="flex space-x-2">
+                <form th:action="@{/update-status}" method="post" class="flex items-center space-x-2">
+                  <input type="hidden" name="id" th:value="${cert.id}">
+                  <input type="hidden" name="type" value="death">
+                  <select name="status" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                  <input type="text" name="remarks" class="border border-gray-200 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Remarks">
+                  <button type="submit" class="action-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                    Update
+                  </button>
+                </form>
+                <a th:href="@{/admin-view-applications/death/{id}(id=${cert.id})}" class="action-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm">
+                  <i class="fas fa-eye mr-1"></i> View
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr th:if="${deathCertificate.isEmpty()}">
+            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+              No death certificate applications found
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- JavaScript for Tab Functionality -->
+<script>
+  function showTab(tabId) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => {
+          tab.classList.remove('active');
+          tab.style.display = 'none'; // Ensure they're hidden
+      });
+
+      // Remove active class from all tab buttons
+      document.querySelectorAll('.tab-button').forEach(button => {
+          button.classList.remove('active');
+      });
+
+      // Show the selected tab content
+      const activeTab = document.getElementById(tabId);
+      activeTab.classList.add('active');
+      activeTab.style.display = 'block';
+
+      // Add active class to the clicked tab button
+      event.currentTarget.classList.add('active');
+  }
+
+  // Initialize the first tab as active and hide others
+  document.addEventListener('DOMContentLoaded', function() {
+      // Hide all tab contents except the first one
+      document.querySelectorAll('.tab-content').forEach((tab, index) => {
+          if(index === 0) {
+              tab.classList.add('active');
+              tab.style.display = 'block';
+          } else {
+              tab.style.display = 'none';
+          }
+      });
+
+      // Activate the first tab button
+      document.querySelector('.tab-button').classList.add('active');
+  });
+</script>
+</body>
+</html>

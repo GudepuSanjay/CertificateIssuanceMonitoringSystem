@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Marriage Certificate Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-6">
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <!-- Header Section -->
+    <div class="bg-gradient-to-r from-pink-600 to-red-700 p-6 text-white">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold flex items-center gap-2">
+                <i class="ph ph-heart text-2xl"></i>
+                Marriage Certificate Details
+            </h1>
+            <span class="px-3 py-1 rounded-full text-sm font-medium"
+                  th:class="${details.status == 'Approved' ? 'bg-green-100 text-green-800' :
+                            (details.status == 'Rejected' ? 'bg-red-100 text-red-800' :
+                            'bg-yellow-100 text-yellow-800')}"
+                  th:text="${details.status}">
+                Status
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="p-6" th:if="${details != null}">
+        <!-- Application Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-pink-50 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold text-pink-800 mb-3 flex items-center">
+                    <i class="ph ph-identification-card text-pink-600 mr-2"></i>
+                    Application Information
+                </h3>
+                <div class="space-y-2">
+                    <p><strong class="text-gray-700">Application ID:</strong> <span th:text="${details.id}" class="font-mono"></span></p>
+                    <p><strong class="text-gray-700">Submitted On:</strong> <span th:text="${#temporals.format(details.applicationDate, 'dd MMM yyyy')}"></span></p>
+                    <p><strong class="text-gray-700">Registration No:</strong> <span th:text="${details.registrationNumber != null} ? ${details.registrationNumber} : 'Not assigned'"></span></p>
+                </div>
+            </div>
+
+            <div class="bg-purple-50 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold text-purple-800 mb-3 flex items-center">
+                    <i class="ph ph-info text-purple-600 mr-2"></i>
+                    Status Details
+                </h3>
+                <div class="space-y-2">
+                    <p><strong class="text-gray-700">Current Status:</strong>
+                        <span th:text="${details.status}"
+                              th:class="${details.status == 'Approved' ? 'text-green-600' :
+                                         (details.status == 'Rejected' ? 'text-red-600' :
+                                         'text-yellow-600')}"></span>
+                    </p>
+                    <p th:if="${details.remarks}">
+                        <strong class="text-gray-700">Remarks:</strong>
+                        <span th:text="${details.remarks}" class="italic"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Couple Details -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Bride Details -->
+            <div class="bg-pink-50 border border-pink-100 rounded-lg p-6 shadow-sm">
+                <h3 class="text-xl font-semibold text-pink-800 mb-4 flex items-center">
+                    <i class="ph ph-user-female text-pink-600 mr-2"></i>
+                    Bride Details
+                </h3>
+                <div class="space-y-3">
+                    <p><strong class="text-gray-700">Full Name:</strong> <span th:text="${details.brideFullName}"></span></p>
+                    <p><strong class="text-gray-700">Father's Name:</strong> <span th:text="${details.brideFatherName}"></span></p>
+                    <p><strong class="text-gray-700">Date of Birth:</strong> <span th:text="${#temporals.format(details.brideDob, 'dd MMM yyyy')}"></span></p>
+                    <p><strong class="text-gray-700">Occupation:</strong> <span th:text="${details.brideOccupation}"></span></p>
+                    <p><strong class="text-gray-700">Religion:</strong> <span th:text="${details.brideReligion}"></span></p>
+                    <p><strong class="text-gray-700">Aadhaar No:</strong> <span th:text="${details.brideAadhaarNo}"></span></p>
+                    <p><strong class="text-gray-700">Address:</strong> <span th:text="${details.brideAddress}"></span></p>
+                </div>
+            </div>
+
+            <!-- Groom Details -->
+            <div class="bg-blue-50 border border-blue-100 rounded-lg p-6 shadow-sm">
+                <h3 class="text-xl font-semibold text-blue-800 mb-4 flex items-center">
+                    <i class="ph ph-user-male text-blue-600 mr-2"></i>
+                    Groom Details
+                </h3>
+                <div class="space-y-3">
+                    <p><strong class="text-gray-700">Full Name:</strong> <span th:text="${details.groomFullName}"></span></p>
+                    <p><strong class="text-gray-700">Father's Name:</strong> <span th:text="${details.groomFatherName}"></span></p>
+                    <p><strong class="text-gray-700">Date of Birth:</strong> <span th:text="${#temporals.format(details.groomDob, 'dd MMM yyyy')}"></span></p>
+                    <p><strong class="text-gray-700">Occupation:</strong> <span th:text="${details.groomOccupation}"></span></p>
+                    <p><strong class="text-gray-700">Religion:</strong> <span th:text="${details.groomReligion}"></span></p>
+                    <p><strong class="text-gray-700">Aadhaar No:</strong> <span th:text="${details.groomAadhaarNo}"></span></p>
+                    <p><strong class="text-gray-700">Address:</strong> <span th:text="${details.groomAddress}"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marriage Details -->
+        <div class="bg-purple-50 border border-purple-100 rounded-lg p-6 mb-8 shadow-sm">
+            <h3 class="text-xl font-semibold text-purple-800 mb-4 flex items-center">
+                <i class="ph ph-heart-break text-purple-600 mr-2"></i>
+                Marriage Details
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p><strong class="text-gray-700">Marriage Date:</strong> <span th:text="${#temporals.format(details.marriageDate, 'dd MMM yyyy')}"></span></p>
+                    <p><strong class="text-gray-700">Marriage Place:</strong> <span th:text="${details.marriagePlace}"></span></p>
+                    <p><strong class="text-gray-700">District:</strong> <span th:text="${details.district}"></span></p>
+                </div>
+                <div>
+                    <p><strong class="text-gray-700">State:</strong> <span th:text="${details.state}"></span></p>
+                    <p><strong class="text-gray-700">Marriage Type:</strong> <span th:text="${details.marriageType}"></span></p>
+                    <p><strong class="text-gray-700">Previous Marital Status:</strong> <span th:text="${details.previousMaritalStatus}"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Witness Details -->
+        <div class="bg-green-50 border border-green-100 rounded-lg p-6 mb-8 shadow-sm">
+            <h3 class="text-xl font-semibold text-green-800 mb-4 flex items-center">
+                <i class="ph ph-users text-green-600 mr-2"></i>
+                Witness Details
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-medium text-gray-700 mb-2">Witness 1</h4>
+                    <p><strong class="text-gray-700">Name:</strong> <span th:text="${details.witness1Name}"></span></p>
+                    <p><strong class="text-gray-700">Aadhaar No:</strong> <span th:text="${details.witness1Aadhaar}"></span></p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gray-700 mb-2">Witness 2</h4>
+                    <p><strong class="text-gray-700">Name:</strong> <span th:text="${details.witness2Name}"></span></p>
+                    <p><strong class="text-gray-700">Aadhaar No:</strong> <span th:text="${details.witness2Aadhaar}"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Section -->
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i class="ph ph-files text-indigo-600 mr-2"></i>
+                Uploaded Documents
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Bride Documents -->
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-identification-card text-pink-500 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Bride's Aadhaar</h4>
+                    </div>
+                    <a th:href="@{'/' + ${details.brideAadhaarPath}}" target="_blank"
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                        <i class="ph ph-eye mr-1"></i> View Document
+                    </a>
+                </div>
+
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-certificate text-pink-400 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Bride's Birth Proof</h4>
+                    </div>
+                    <a th:href="@{'/' + ${details.brideBirthProofPath}}" target="_blank"
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                        <i class="ph ph-eye mr-1"></i> View Document
+                    </a>
+                </div>
+
+                <!-- Groom Documents -->
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-identification-card text-blue-500 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Groom's Aadhaar</h4>
+                    </div>
+                    <a th:href="@{'/' + ${details.groomAadhaarPath}}" target="_blank"
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                        <i class="ph ph-eye mr-1"></i> View Document
+                    </a>
+                </div>
+
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-certificate text-blue-400 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Groom's Birth Proof</h4>
+                    </div>
+                    <a th:href="@{'/' + ${details.groomBirthProofPath}}" target="_blank"
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                        <i class="ph ph-eye mr-1"></i> View Document
+                    </a>
+                </div>
+
+                <!-- Marriage Documents -->
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-file-text text-purple-500 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Marriage Affidavit</h4>
+                    </div>
+                    <a th:href="@{'/' + ${details.marriageAffidavitPath}}" target="_blank"
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                        <i class="ph ph-eye mr-1"></i> View Document
+                    </a>
+                </div>
+
+                <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                     th:if="${details.weddingPhotosPath != null and !details.weddingPhotosPath.isEmpty()}">
+                    <div class="flex items-center mb-2">
+                        <i class="ph ph-image text-amber-500 text-2xl mr-3"></i>
+                        <h4 class="font-medium text-gray-800">Wedding Photos</h4>
+                    </div>
+                    <a th:href="@{'/' + ${details.weddingPhotosPath}}" target="_blank"
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-2">
+                        <i class="ph ph-eye mr-1"></i> View Photos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex justify-between no-print">
+            <a href="/view-applications" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <i class="ph ph-arrow-left mr-2"></i> Back to Applications
+            </a>
+
+            <div class="space-x-3">
+                <button onclick="window.print()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <i class="ph ph-printer mr-2"></i> Print
+                </button>
+                <a th:if="${details.status == 'Approved'}"
+                   th:href="@{/download/marriage/{id}(id=${details.id})}"
+                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <i class="ph ph-download mr-2"></i> Download Certificate
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // JavaScript remains the same
+    });
+</script>
+</body>
+</html>

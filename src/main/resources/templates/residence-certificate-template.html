@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+<div style="text-align: center; border: 2px solid black; padding: 20px; max-width: 800px; margin: 0 auto;">
+  <div style="text-align: right; margin-bottom: 15px;">
+    Certificate No: <strong th:text="${id}"></strong>
+  </div>
+
+  <h2>GOVERNMENT OF TELANGANA</h2>
+  <h2>REVENUE DEPARTMENT</h2>
+  <h3>RESIDENCE CERTIFICATE</h3>
+
+  <div style="text-align: left; margin: 20px 0; line-height: 1.6;">
+    <p>This is to certify that Shri/Smt/Kum <strong th:text="${fullName}"></strong>,</p>
+    <p>S/O, D/O, W/O <strong th:text="${fatherName}"></strong>,</p>
+    <p>is a permanent resident of the following address:</p>
+
+    <p style="margin-left: 40px;"><strong th:text="${permanentAddress}"></strong></p>
+    <p style="margin-left: 40px;"><strong th:text="${district}"></strong> District, <strong th:text="${state}"></strong></p>
+
+    <p style="margin-top: 15px;">As per the verification of records, the above person has been residing at the mentioned address
+      continuously for the past <strong th:text="${residenceYears}"></strong> years.</p>
+
+    <p>This certificate is issued for official purposes and is subject to verification from original documents.</p>
+
+    <p style="margin-top: 15px;">Application Date: <strong th:text="${applicationDate}"></strong></p>
+    <p>Certificate Issued Date: <strong th:text="${issuedDate}"></strong></p>
+  </div>
+
+  <div style="text-align: right; margin-top: 30px;">
+    <p>_________________________</p>
+    <p>Tahsildar</p>
+    <p>Revenue Department</p>
+  </div>
+</div>
+</body>
+</html>

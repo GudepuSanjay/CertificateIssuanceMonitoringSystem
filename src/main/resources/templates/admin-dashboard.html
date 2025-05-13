@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-card {
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid;
+        }
+
+        .status-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 0.5rem;
+            width: 200px;
+            border-radius: 0.5rem;
+            background-color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex font-sans">
+<!-- Sidebar -->
+<div class="w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-gray-300 min-h-screen p-6 fixed shadow-xl">
+    <div class="flex items-center mb-10">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg mr-3">
+            <i class="fas fa-user-shield text-white text-xl"></i>
+        </div>
+        <h2 class="text-white text-xl font-bold">Admin Portal</h2>
+    </div>
+    <ul class="space-y-2">
+        <li>
+            <a th:href="@{/admin-dashboard}" class="flex items-center gap-3 p-4 rounded-xl bg-gray-800 text-white transition-all group">
+                <div class="bg-blue-500/20 p-2 rounded-lg group-hover:bg-blue-500/30 transition-colors">
+                    <i class="fas fa-chart-pie text-blue-400 w-5 text-center group-hover:text-blue-300"></i>
+                </div>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin-view-applications}" class="flex items-center gap-3 p-4 rounded-xl hover:bg-gray-800 hover:text-white transition-all group">
+                <div class="bg-purple-500/20 p-2 rounded-lg group-hover:bg-purple-500/30 transition-colors">
+                    <i class="fas fa-file-alt text-purple-400 w-5 text-center group-hover:text-purple-300"></i>
+                </div>
+                <span>View Applications</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/approved-applications}" class="flex items-center gap-3 p-4 rounded-xl hover:bg-gray-800 hover:text-white transition-all group">
+                <div class="bg-green-500/20 p-2 rounded-lg group-hover:bg-green-500/30 transition-colors">
+                    <i class="fas fa-check-double text-green-400 w-5 text-center group-hover:text-green-300"></i>
+                </div>
+                <span>Approved</span>
+                <span class="ml-auto bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full" th:text="${totalApprovedApplications}"></span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/rejected-applications}" class="flex items-center gap-3 p-4 rounded-xl hover:bg-gray-800 hover:text-white transition-all group">
+                <div class="bg-red-500/20 p-2 rounded-lg group-hover:bg-red-500/30 transition-colors">
+                    <i class="fas fa-ban text-red-400 w-5 text-center group-hover:text-red-300"></i>
+                </div>
+                <span>Rejected</span>
+                <span class="ml-auto bg-red-500/20 text-red-400 text-xs px-2 py-1 rounded-full" th:text="${totalRejectedApplications}"></span>
+            </a>
+        </li>
+        <li class="mt-8 pt-4 border-t border-gray-700">
+            <a th:href="@{/logout}" class="flex items-center gap-3 p-4 rounded-xl hover:bg-gray-800 text-red-400 hover:text-red-300 transition-all group">
+                <div class="bg-red-500/20 p-2 rounded-lg group-hover:bg-red-500/30 transition-colors">
+                    <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                </div>
+                <span>Logout</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="flex-1 ml-64 p-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Welcome back, <span class="text-blue-600" th:text="${username}">Admin</span></h1>
+            <p class="text-gray-500">Here's what's happening with your applications today</p>
+        </div>
+        <div class="relative">
+            <button id="profileButton" class="flex items-center space-x-2 focus:outline-none">
+                <div class="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium">
+                    <span th:text="${username.substring(0, 1).toUpperCase()}">A</span>
+                </div>
+                <span class="text-gray-700 font-medium" th:text="${username}">Admin</span>
+                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+            </button>
+            <div id="profileDropdown" class="profile-dropdown">
+                <div class="p-4 border-b border-gray-100">
+                    <div class="flex items-center space-x-3">
+                        <div class="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium">
+                            <span th:text="${username.substring(0, 1).toUpperCase()}">A</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900" th:text="${username}">Admin User</p>
+                            <p class="text-xs text-gray-500">Administrator</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-2">
+                    <a th:href="@{/update-profile}" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded">Your Profile</a>
+                    <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded">Settings</a>
+                    <a th:href="@{/logout}" class="block px-3 py-2 text-sm text-red-600 hover:bg-gray-50 rounded">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-semibold text-gray-900">Users & Certificates Overview</h2>
+            <div class="flex items-center space-x-2">
+                <span class="text-xs text-gray-500">Last updated: <span th:text="${#temporals.format(#temporals.createNow(), 'MMM dd, yyyy HH:mm')}">Today</span></span>
+                <button class="text-blue-500 hover:text-blue-600">
+                    <i class="fas fa-sync-alt text-sm"></i>
+                </button>
+            </div>
+        </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Total Users -->
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow-sm border border-blue-100 card-hover">
+            <div class="flex justify-between">
+                <div>
+                    <p class="text-sm font-medium text-blue-800 uppercase tracking-wider">Total Users</p>
+                    <h3 class="text-3xl font-bold mt-2 text-blue-900" th:text="${totalUsers}">0</h3>
+                </div>
+                <div class="h-12 w-12 rounded-xl bg-blue-200/50 flex items-center justify-center">
+                    <i class="fas fa-users text-blue-700 text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-sm text-blue-700">
+                <i class="fas fa-arrow-up mr-1"></i>
+                <span>12.5% increase this month</span>
+            </div>
+        </div>
+
+        <!-- Approved Applications -->
+        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow-sm border border-green-100 card-hover">
+            <div class="flex justify-between">
+                <div>
+                    <p class="text-sm font-medium text-green-800 uppercase tracking-wider">Approved</p>
+                    <h3 class="text-3xl font-bold mt-2 text-green-900" th:text="${totalApprovedApplications}">0</h3>
+                </div>
+                <div class="h-12 w-12 rounded-xl bg-green-200/50 flex items-center justify-center">
+                    <i class="fas fa-check-circle text-green-700 text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-sm text-green-700">
+                <i class="fas fa-arrow-up mr-1"></i>
+                <span>8.2% success rate</span>
+            </div>
+        </div>
+
+        <!-- Pending Applications -->
+        <div class="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-2xl shadow-sm border border-amber-100 card-hover">
+            <div class="flex justify-between">
+                <div>
+                    <p class="text-sm font-medium text-amber-800 uppercase tracking-wider">Pending</p>
+                    <h3 class="text-3xl font-bold mt-2 text-amber-900"
+                        th:text="${(pendingBirthStatus ?: 0) + (pendingIncomeStatus ?: 0) + (pendingDeathStatus ?: 0) + (pendingMarriageStatus ?: 0) + (pendingResidenceStatus ?: 0)}">0</h3>
+                </div>
+                <div class="h-12 w-12 rounded-xl bg-amber-200/50 flex items-center justify-center">
+                    <i class="fas fa-clock text-amber-700 text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 grid grid-cols-2 gap-2 text-xs text-amber-800">
+                <span>Birth: <span th:text="${pendingBirthStatus}">0</span></span>
+                <span>Income: <span th:text="${pendingIncomeStatus}">0</span></span>
+                <span>Death: <span th:text="${pendingDeathStatus}">0</span></span>
+                <span>Caste: <span th:text="${pendingCasteStatus}">0</span></span>
+                <span>Residence: <span th:text="${pendingResidenceStatus}">0</span></span>
+                <span>Marriage: <span th:text="${pendingMarriageStatus}">0</span></span>
+            </div>
+        </div>
+        <!-- Rejected Applications -->
+        <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-2xl shadow-sm border border-red-100 card-hover">
+            <div class="flex justify-between">
+                <div>
+                    <p class="text-sm font-medium text-red-800 uppercase tracking-wider">Rejected</p>
+                    <h3 class="text-3xl font-bold mt-2 text-red-900" th:text="${totalRejectedApplications}">0</h3>
+                </div>
+                <div class="h-12 w-12 rounded-xl bg-red-200/50 flex items-center justify-center">
+                    <i class="fas fa-times-circle text-red-700 text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-sm text-red-700">
+                <i class="fas fa-arrow-down mr-1"></i>
+                <span>3.5% rejection rate</span>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+    <!-- Certificate Cards -->
+<!--    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">-->
+<!--        &lt;!&ndash; Birth Certificate &ndash;&gt;-->
+<!--        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow-sm border border-blue-100 card-hover">-->
+<!--            <div class="flex items-center mb-4">-->
+<!--                <div class="h-10 w-10 rounded-lg bg-blue-200 flex items-center justify-center mr-3">-->
+<!--                    <i class="fas fa-baby-carriage text-blue-700"></i>-->
+<!--                </div>-->
+<!--                <h2 class="text-lg font-semibold text-blue-900">Birth Certificates</h2>-->
+<!--            </div>-->
+<!--            <div class="space-y-3">-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-blue-800">Total Applications</span>-->
+<!--                    <span class="font-medium text-blue-900" th:text="${birthCertificateApplications}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-blue-800">Approved</span>-->
+<!--                    <span class="font-medium text-green-700" th:text="${approvedBirthStatus}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-blue-800">Pending</span>-->
+<!--                    <span class="font-medium text-amber-700" th:text="${pendingBirthStatus}">0</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Income Certificate &ndash;&gt;-->
+<!--        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow-sm border border-green-100 card-hover">-->
+<!--            <div class="flex items-center mb-4">-->
+<!--                <div class="h-10 w-10 rounded-lg bg-green-200 flex items-center justify-center mr-3">-->
+<!--                    <i class="fas fa-money-bill-wave text-green-700"></i>-->
+<!--                </div>-->
+<!--                <h2 class="text-lg font-semibold text-green-900">Income Certificates</h2>-->
+<!--            </div>-->
+<!--            <div class="space-y-3">-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-green-800">Total Applications</span>-->
+<!--                    <span class="font-medium text-green-900" th:text="${incomeCertificateApplications}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-green-800">Approved</span>-->
+<!--                    <span class="font-medium text-green-700" th:text="${approvedIncomeStatus}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-green-800">Pending</span>-->
+<!--                    <span class="font-medium text-amber-700" th:text="${pendingIncomeStatus}">0</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Death Certificate &ndash;&gt;-->
+<!--        <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl shadow-sm border border-gray-100 card-hover">-->
+<!--            <div class="flex items-center mb-4">-->
+<!--                <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">-->
+<!--                    <i class="fas fa-cross text-gray-700"></i>-->
+<!--                </div>-->
+<!--                <h2 class="text-lg font-semibold text-gray-900">Death Certificates</h2>-->
+<!--            </div>-->
+<!--            <div class="space-y-3">-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-gray-800">Total Applications</span>-->
+<!--                    <span class="font-medium text-gray-900" th:text="${deathCertificateCount}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-gray-800">Approved</span>-->
+<!--                    <span class="font-medium text-green-700" th:text="${approvedDeathStatus}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-gray-800">Pending</span>-->
+<!--                    <span class="font-medium text-amber-700" th:text="${pendingDeathStatus}">0</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Marriage Certificate &ndash;&gt;-->
+<!--        <div class="bg-gradient-to-br from-pink-50 to-pink-100 p-6 rounded-2xl shadow-sm border border-pink-100 card-hover">-->
+<!--            <div class="flex items-center mb-4">-->
+<!--                <div class="h-10 w-10 rounded-lg bg-pink-200 flex items-center justify-center mr-3">-->
+<!--                    <i class="fas fa-heart text-pink-700"></i>-->
+<!--                </div>-->
+<!--                <h2 class="text-lg font-semibold text-pink-900">Marriage Certificates</h2>-->
+<!--            </div>-->
+<!--            <div class="space-y-3">-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-pink-800">Total Applications</span>-->
+<!--                    <span class="font-medium text-pink-900" th:text="${marriageCertificateCount}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-pink-800">Approved</span>-->
+<!--                    <span class="font-medium text-green-700" th:text="${approvedMarriageStatus}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-pink-800">Pending</span>-->
+<!--                    <span class="font-medium text-amber-700" th:text="${pendingMarriageStatus}">0</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Residence Certificate &ndash;&gt;-->
+<!--        <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-2xl shadow-sm border border-indigo-100 card-hover">-->
+<!--            <div class="flex items-center mb-4">-->
+<!--                <div class="h-10 w-10 rounded-lg bg-indigo-200 flex items-center justify-center mr-3">-->
+<!--                    <i class="fas fa-home text-indigo-700"></i>-->
+<!--                </div>-->
+<!--                <h2 class="text-lg font-semibold text-indigo-900">Residence Certificates</h2>-->
+<!--            </div>-->
+<!--            <div class="space-y-3">-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-indigo-800">Total Applications</span>-->
+<!--                    <span class="font-medium text-indigo-900" th:text="${residenceCertificateCount}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-indigo-800">Approved</span>-->
+<!--                    <span class="font-medium text-green-700" th:text="${approvedResidenceStatus}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-indigo-800">Pending</span>-->
+<!--                    <span class="font-medium text-amber-700" th:text="${pendingResidenceStatus}">0</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Caste Certificate &ndash;&gt;-->
+<!--        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl shadow-sm border border-purple-100 card-hover">-->
+<!--            <div class="flex items-center mb-4">-->
+<!--                <div class="h-10 w-10 rounded-lg bg-purple-200 flex items-center justify-center mr-3">-->
+<!--                    <i class="fas fa-id-card-alt text-purple-700"></i>-->
+<!--                </div>-->
+<!--                <h2 class="text-lg font-semibold text-purple-900">Caste Certificates</h2>-->
+<!--            </div>-->
+<!--            <div class="space-y-3">-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-purple-800">Total Applications</span>-->
+<!--                    <span class="font-medium text-purple-900" th:text="${casteCertificateCount}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-purple-800">Approved</span>-->
+<!--                    <span class="font-medium text-green-700" th:text="${casteApproved}">0</span>-->
+<!--                </div>-->
+<!--                <div class="flex justify-between items-center">-->
+<!--                    <span class="text-purple-800">Rejected</span>-->
+<!--                    <span class="font-medium text-red-700" th:text="${casteRejected}">0</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <br>
+    <!-- Status Overview -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-semibold text-gray-900">Application Status Overview</h2>
+            <div class="flex items-center space-x-2">
+                <span class="text-xs text-gray-500">Last updated: <span th:text="${#temporals.format(#temporals.createNow(), 'MMM dd, yyyy HH:mm')}">Today</span></span>
+                <button class="text-blue-500 hover:text-blue-600">
+                    <i class="fas fa-sync-alt text-sm"></i>
+                </button>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Birth Certificate -->
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow-sm border border-blue-100 card-hover">
+                <div class="flex items-center mb-4">
+                    <div class="h-10 w-10 rounded-lg bg-blue-200 flex items-center justify-center mr-3">
+                        <i class="fas fa-baby-carriage text-blue-700"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-blue-900">Birth Certificates</h2>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-blue-800">Total Applications</span>
+                        <span class="font-medium text-blue-900" th:text="${birthCertificateApplications}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-blue-800">Approved</span>
+                        <span class="font-medium text-green-700" th:text="${approvedBirthStatus}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-blue-800">Pending</span>
+                        <span class="font-medium text-amber-700" th:text="${pendingBirthStatus}">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income Certificate -->
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow-sm border border-green-100 card-hover">
+                <div class="flex items-center mb-4">
+                    <div class="h-10 w-10 rounded-lg bg-green-200 flex items-center justify-center mr-3">
+                        <i class="fas fa-money-bill-wave text-green-700"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-green-900">Income Certificates</h2>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-800">Total Applications</span>
+                        <span class="font-medium text-green-900" th:text="${incomeCertificateApplications}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-800">Approved</span>
+                        <span class="font-medium text-green-700" th:text="${approvedIncomeStatus}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-800">Pending</span>
+                        <span class="font-medium text-amber-700" th:text="${pendingIncomeStatus}">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Death Certificate -->
+            <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl shadow-sm border border-gray-100 card-hover">
+                <div class="flex items-center mb-4">
+                    <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">
+                        <i class="fas fa-cross text-gray-700"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-900">Death Certificates</h2>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-800">Total Applications</span>
+                        <span class="font-medium text-gray-900" th:text="${deathCertificateApplications}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-800">Approved</span>
+                        <span class="font-medium text-green-700" th:text="${approvedDeathStatus}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-800">Pending</span>
+                        <span class="font-medium text-amber-700" th:text="${pendingDeathStatus}">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marriage Certificate -->
+            <div class="bg-gradient-to-br from-pink-50 to-pink-100 p-6 rounded-2xl shadow-sm border border-pink-100 card-hover">
+                <div class="flex items-center mb-4">
+                    <div class="h-10 w-10 rounded-lg bg-pink-200 flex items-center justify-center mr-3">
+                        <i class="fas fa-heart text-pink-700"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-pink-900">Marriage Certificates</h2>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-pink-800">Total Applications</span>
+                        <span class="font-medium text-pink-900" th:text="${marriageCertificateApplications}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-pink-800">Approved</span>
+                        <span class="font-medium text-green-700" th:text="${approvedMarriageStatus}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-pink-800">Pending</span>
+                        <span class="font-medium text-amber-700" th:text="${pendingMarriageStatus}">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Residence Certificate -->
+            <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-2xl shadow-sm border border-indigo-100 card-hover">
+                <div class="flex items-center mb-4">
+                    <div class="h-10 w-10 rounded-lg bg-indigo-200 flex items-center justify-center mr-3">
+                        <i class="fas fa-home text-indigo-700"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-indigo-900">Residence Certificates</h2>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-indigo-800">Total Applications</span>
+                        <span class="font-medium text-indigo-900" th:text="${residenceCertificateApplications}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-indigo-800">Approved</span>
+                        <span class="font-medium text-green-700" th:text="${approvedResidenceStatus}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-indigo-800">Pending</span>
+                        <span class="font-medium text-amber-700" th:text="${pendingResidenceStatus}">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caste Certificate -->
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl shadow-sm border border-purple-100 card-hover">
+                <div class="flex items-center mb-4">
+                    <div class="h-10 w-10 rounded-lg bg-purple-200 flex items-center justify-center mr-3">
+                        <i class="fas fa-id-card-alt text-purple-700"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-purple-900">Caste Certificates</h2>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-purple-800">Total Applications</span>
+                        <span class="font-medium text-purple-900" th:text="${casteCertificateApplications}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-purple-800">Approved</span>
+                        <span class="font-medium text-green-700" th:text="${approvedCasteStatus}">0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-purple-800">Rejected</span>
+                        <span class="font-medium text-red-700" th:text="${rejectedCasteStatus}">0</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Profile dropdown toggle
+    document.getElementById('profileButton').addEventListener('click', function() {
+        document.getElementById('profileDropdown').classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(event) {
+        if (!event.target.matches('#profileButton') && !event.target.closest('#profileButton')) {
+            var dropdowns = document.getElementsByClassName("profile-dropdown");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

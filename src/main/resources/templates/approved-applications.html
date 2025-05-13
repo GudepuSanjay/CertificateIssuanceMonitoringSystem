@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Approved Applications | Admin Portal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        .table-row:hover {
+            background-color: #f8fafc;
+        }
+
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-icon {
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex">
+<!-- Sidebar -->
+<div class="sidebar w-64 text-gray-300 min-h-screen p-6 fixed shadow-xl">
+    <div class="flex items-center mb-10">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg mr-3">
+            <i class="fas fa-user-shield text-white text-xl"></i>
+        </div>
+        <h2 class="text-white text-xl font-bold">Admin Portal</h2>
+    </div>
+    <ul class="space-y-2">
+        <li>
+            <a th:href="@{/admin-dashboard}" class="nav-item flex items-center gap-3 p-4 rounded-xl hover:text-white group">
+                <div class="bg-blue-500/20 p-2 rounded-lg group-hover:bg-blue-500/30 transition-colors">
+                    <i class="fas fa-chart-pie text-blue-400 w-5 text-center group-hover:text-blue-300 nav-icon"></i>
+                </div>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin-view-applications}" class="nav-item flex items-center gap-3 p-4 rounded-xl hover:text-white group">
+                <div class="bg-blue-500/20 p-2 rounded-lg group-hover:bg-blue-500/30 transition-colors">
+                    <i class="fas fa-file-alt text-blue-400 w-5 text-center group-hover:text-blue-300 nav-icon"></i>
+                </div>
+                <span>View Applications</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/approved-applications}" class="nav-item active flex items-center gap-3 p-4 rounded-xl text-white group">
+                <div class="bg-green-500/30 p-2 rounded-lg">
+                    <i class="fas fa-check-double text-green-300 w-5 text-center nav-icon"></i>
+                </div>
+                <span>Approved</span>
+                <span class="ml-auto bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full" th:text="${totalApprovedApplications}"></span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/rejected-applications}" class="nav-item flex items-center gap-3 p-4 rounded-xl hover:text-white group">
+                <div class="bg-red-500/20 p-2 rounded-lg group-hover:bg-red-500/30 transition-colors">
+                    <i class="fas fa-ban text-red-400 w-5 text-center group-hover:text-red-300 nav-icon"></i>
+                </div>
+                <span>Rejected</span>
+                <span class="ml-auto bg-red-500/20 text-red-400 text-xs px-2 py-1 rounded-full" th:text="${totalRejectedApplications}"></span>
+            </a>
+        </li>
+        <li class="mt-8 pt-4 border-t border-gray-700">
+            <a th:href="@{/logout}" class="nav-item flex items-center gap-3 p-4 rounded-xl text-red-400 hover:text-red-300 group">
+                <div class="bg-red-500/20 p-2 rounded-lg group-hover:bg-red-500/30 transition-colors">
+                    <i class="fas fa-sign-out-alt w-5 text-center nav-icon"></i>
+                </div>
+                <span>Logout</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<main class="flex-1 p-8 ml-64">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Approved Applications</h1>
+            <p class="text-gray-500">View all approved certificate applications</p>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <button id="profileButton" class="flex items-center space-x-2 focus:outline-none">
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium">
+                        <span th:text="${username != null ? username.substring(0, 1).toUpperCase() : 'A'}">A</span>
+                    </div>
+                    <span class="text-gray-700 font-medium" th:text="${username}">Admin</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="card p-6 mb-6">
+        <div class="flex justify-between items-center">
+            <div class="relative w-1/3">
+                <input type="text" placeholder="Search applications..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full">
+                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+            <div class="flex space-x-2">
+                <select class="border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>All Types</option>
+                    <option>Birth Certificate</option>
+                    <option>Income Certificate</option>
+                    <option>Caste Certificate</option>
+                    <option>Residence Certificate</option>
+                </select>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
+                    <i class="fas fa-filter mr-2"></i> Filter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications Table -->
+    <div class="card p-6">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                <tr class="bg-gray-50 text-gray-600 text-sm">
+                    <th class="px-6 py-3 text-left font-medium">Application ID</th>
+                    <th class="px-6 py-3 text-left font-medium">Applicant Name</th>
+<!--                    <th class="px-6 py-3 text-left font-medium">Certificate Type</th>-->
+                    <th class="px-6 py-3 text-left font-medium">Approved Date</th>
+                    <th class="px-6 py-3 text-left font-medium">Remarks</th>
+                    <th class="px-6 py-3 text-left font-medium">Actions</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                <tr th:each="app : ${applications}" class="table-row">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${app.id}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${app.fullName}"></td>
+<!--                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${app.certificateType}"></td>-->
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(app.applicationDate, 'dd-MM-yyyy')}"></td>
+                    <td class="px-6 py-4 text-sm text-gray-500" th:text="${#strings.abbreviate(app.remarks, 30)}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <div class="flex space-x-2">
+                            <a th:href="@{'/view-certificate/' + (app.certificateType != null ? app.certificateType.toLowerCase() : '') + '/' + ${app.id}}" ...>
+                                <i class="fas fa-eye mr-1"></i> View
+                            </a>
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm flex items-center">
+                                <i class="fas fa-download mr-1"></i> Download
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${applications.isEmpty()}">
+                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+                        No approved applications found
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-between items-center mt-6">
+            <div class="text-sm text-gray-500">
+                Showing
+                <span th:text="${currentPage != null and pageSize != null ? (currentPage * pageSize + 1) : 1}">1</span> to
+                <span th:text="${currentPage != null and pageSize != null and totalItems != null ?
+                  ((currentPage + 1) * pageSize > totalItems ? totalItems : (currentPage + 1) * pageSize) : 10}">10</span> of
+                <span th:text="${totalItems != null ? totalItems : 0}">0</span> applications
+            </div>
+            <div class="flex space-x-2">
+                <button th:disabled="${(currentPage ?: 0) == 0}"
+                        class="px-3 py-1 border border-gray-200 rounded-md text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50">
+                    Previous
+                </button>
+                <button th:disabled="${((currentPage ?: 0) + 1) * (pageSize ?: 10) >= (totalItems ?: 0)}"
+                        class="px-3 py-1 border border-gray-200 rounded-md text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
