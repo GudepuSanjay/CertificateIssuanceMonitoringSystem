@@ -1,7 +1,7 @@
 
 # 🎓 Certificate Issuance Monitoring System
 
-The **Certificate Issuance Monitoring System** is a web-based application built with **Spring Boot** to streamline the request, review, and issuance of various types of certificates. The system provides two dashboards: one for the **Applicant** and another for the **Admin**, enabling a seamless process for managing applications and issuing certificates digitally.
+The **Certificate Issuance Monitoring System** is a web-based application built with **Spring Boot** to streamline the request, review, and issuance of various types of certificates. The system provides two dashboards: one for the **Applicant** and another for the **Admin**, enabling a seamless digital process for managing applications and issuing certificates.
 
 ---
 
@@ -15,27 +15,25 @@ The **Certificate Issuance Monitoring System** is a web-based application built 
   - Marriage Certificate
   - Birth Certificate
   - Death Certificate
-- View the application status as:
+- Track application status:
   - ✅ Approved
   - ❌ Rejected (with remarks)
   - ⏳ Pending
-- Once approved, download the issued certificate.
+- Download issued certificates after approval.
 - View submitted application forms.
 
 ### 🛡️ Admin Dashboard
 - View and manage all submitted applications.
-- Verify and process each application.
-- Approve applications and issue certificates.
-- Reject applications with appropriate remarks.
-- Access a list of:
-  - Approved certificates
-  - Rejected applications
+- Verify, approve, or reject applications with remarks.
+- Access:
+  - All approved certificates
+  - All rejected applications
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend:** Java, Spring Boot, Spring MVC, Spring Data JPA , Hiberanate(ORM)
+- **Backend:** Java, Spring Boot, Spring MVC, Spring Data JPA, Hibernate (ORM)
 - **Frontend:** HTML, CSS, Thymeleaf
 - **Database:** MySQL
 - **Build Tool:** Maven
@@ -95,6 +93,12 @@ cd Certificate_Issuance_Monitoring_System
 ./mvnw spring-boot:run
 ```
 
+Or if you're using a standard Maven installation:
+
+```bash
+mvn spring-boot:run
+```
+
 ### 3. Access the Application
 
 - **Applicant Dashboard:** [http://localhost:8080/applicant](http://localhost:8080/applicant)
@@ -104,7 +108,7 @@ cd Certificate_Issuance_Monitoring_System
 
 ## 📷 Output Screenshots
 
-
+> Add the following images to the `images/` folder in your repository.
 
 ```markdown
 ![SignUp](images/SignUp_Page.png)
@@ -124,7 +128,6 @@ cd Certificate_Issuance_Monitoring_System
 ![Rejected Applications](images/RejectedApplications_Page.png)
 ```
 
-
 ---
 
 ## 🤝 Contributing
@@ -135,6 +138,5 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 
 ## 📄 License
 
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)  
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
